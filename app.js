@@ -26,12 +26,16 @@ ddoc.views = {
 ddoc.lists = {
   items: function(head, req) {
     provides("html", function(){
-      var row, rows = [];
-      var Mustache = require("views/lib/mustache");
+      var row;
+      var Mustache = require("views/lib/mustache"),
+          data = {
+            title: "All Items",
+            rows: []
+          };
       while(row = getRow()) {
-        rows.push(row);
+        data.rows.push(row);
       }
-      var html = Mustache.to_html(this.templates.items, {rows: rows}, this.templates.partials);
+      var html = Mustache.to_html(this.templates.items, data, this.templates.partials);
       return html;
     });
   }
