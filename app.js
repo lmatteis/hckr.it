@@ -5,7 +5,7 @@
 ddoc = 
   { _id:'_design/app'
   , rewrites : 
-    [ {from:"/", to:'index.html'}
+    [ {from:"/", to:'_list/items/items'}
     , {from:"/api", to:'../../'}
     , {from:"/api/*", to:'../../*'}
     , {from:"/*", to:'*'}
