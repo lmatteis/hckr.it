@@ -1,4 +1,4 @@
- var couchapp = require('couchapp')
+var couchapp = require('couchapp')
   , path = require('path')
   ;
 
@@ -31,7 +31,7 @@ ddoc.lists = {
       while(row = getRow()) {
         rows.push(row);
       }
-      var html = Mustache.to_html(this.templates.items, {rows: rows});
+      var html = Mustache.to_html(this.templates.items, {rows: rows}, this.templates.partials);
       return html;
     });
   }
