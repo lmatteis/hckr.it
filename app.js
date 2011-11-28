@@ -3,9 +3,10 @@ var couchapp = require('couchapp')
   ;
 
 ddoc = 
-  { _id:'_design/app'
+  { _id:'_design/news'
   , rewrites : 
     [ {from:"/", to:'_list/items/items'}
+    , {from:"/login", to:'login.html'}
     , {from:"/api", to:'../../'}
     , {from:"/api/*", to:'../../*'}
     , {from:"/*", to:'*'}
@@ -26,12 +27,15 @@ ddoc.views = {
 ddoc.lists = {
   items: function(head, req) {
     provides("html", function(){
-      var row;
-      var Mustache = require("views/lib/mustache"),
+      var row,
+          Mustache = require("views/lib/mustache"),
           data = {
             title: "All Items",
+            username: req.userCtx.name,
+            login: !(req.userCtx.name),
             rows: []
           };
+
       while(row = getRow()) {
         data.rows.push(row);
       }

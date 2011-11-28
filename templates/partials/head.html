@@ -8,12 +8,10 @@
 
 <body>
   <center>
-    <table border="0" cellpadding="0" cellspacing="0" width="85%"
-    bgcolor="#F6F6EF">
+    <table border="0" cellpadding="0" cellspacing="0" width="85%" bgcolor="#F6F6EF">
       <tr>
         <td bgcolor="#FFBB33">
-          <table border="0" cellpadding="0" cellspacing="0" width=
-          "100%" style="padding:2px">
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding:2px">
             <tr>
               <td style="width:18px;padding-right:4px"><a href=
               "/"><img src=
@@ -31,8 +29,15 @@
               "submit">submit</a></span></td>
 
               <td style="text-align:right;padding-right:4px;">
-              <span class="pagetop"><a href=
-              "/x?fnid=mISrkMZ9XN">login</a></span></td>
+              <span class="pagetop">
+              {{#username}}
+                <a href="/login">{{username}}</a> () | <a href="/logout">logout</a>
+              {{/username}}
+              {{#login}}
+                <a href="/login">login</a>
+              {{/login}}
+  
+              </span></td>
             </tr>
           </table>
         </td>
