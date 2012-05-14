@@ -16,7 +16,7 @@ ddoc.views = {};
 
 ddoc.views.items = {
     map: function(doc) {
-        if(doc.path && doc.points) {
+        if(doc.path) {
             // doc.path should always be an array
             var keys = [];
             for(var i=0; i<doc.path.length; i++) {
@@ -25,9 +25,11 @@ ddoc.views.items = {
             // add its own id as shown here http://probablyprogramming.com/2008/07/04/storing-hierarchical-data-in-couchdb
             keys.push(doc._id);
 
-            keys.push(doc.points);
+            //keys.push(doc.points * -1);
 
-            emit(keys, doc.points);
+            emit(keys, 1);
+        } else if(doc.type === 'vote') {
+            emit(doc.item_id, 1);
         }
     }
 };
