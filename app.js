@@ -17,10 +17,12 @@ ddoc.views = {};
 ddoc.views.items = {
     map: function(doc) {
         if(doc.type === 'item') {
-            var ranking = require('views/lib/ranking');
+            var util = require('views/lib/util');
 
-            var points = ranking.getPoints(doc.voted);
-            var score = ranking.findScore(points, doc.created_at);
+            var points = util.getPoints(doc.voted);
+            var score = util.findScore(points, doc.created_at);
+
+            doc.domain = util.getDomain(doc.url);
 
             emit(score, doc);
         }
@@ -43,7 +45,7 @@ ddoc.lists.all = function(head, req) {
     provides('html', function(){
         var row,
             Mustache = require('views/lib/mustache');
-        var ranking = require('views/lib/ranking');
+        var util = require('views/lib/util');
 
         var data = {
             title: 'All Items',
@@ -54,7 +56,7 @@ ddoc.lists.all = function(head, req) {
 
         while(row = getRow()) {
             var value = row.value;
-            value.points = ranking.getPoints(value.voted);
+            value.points = util.getPoints(value.voted);
             data.rows.push(value);
         }
         var html = Mustache.to_html(this.templates.all, data, this.templates.partials);
@@ -66,10 +68,10 @@ ddoc.lists.item = function(head, req) {
     provides('html', function(){
         var row,
             Mustache = require('views/lib/mustache');
-        var ranking = require('views/lib/ranking');
+        var util = require('views/lib/util');
 
         var item = getRow()['value'];
-        item.points = ranking.getPoints(item.voted);
+        item.points = util.getPoints(item.voted);
 
         var data = {
             title: 'Item',
@@ -81,7 +83,7 @@ ddoc.lists.item = function(head, req) {
 
         while(row = getRow()) {
             var value = row.value;
-            value.points = ranking.getPoints(value.voted);
+            value.points = util.getPoints(value.voted);
             data.rows.push(value);
         }
         var html = Mustache.to_html(this.templates.item, data, this.templates.partials);
@@ -221,7 +223,7 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
     // TODO make sure other properties are of correct format as well.
     // for now we're checking voted which is the most important one
     // since it dictates the ranking algorithm
-    if(!isArray(newDoc.voted)) {
+    if(newDoc.voted && !isArray(newDoc.voted)) {
         unauthorized("The voted property must be a JSON array!!");
     }
 

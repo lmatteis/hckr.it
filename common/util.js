@@ -22,3 +22,7 @@ exports.getPoints = function(voted) {
     var points = arr.length;
     return points;
 }
+
+exports.getDomain = function(url) {
+    return url.match(/:\/\/(.[^/]+)/)[1];
+}
