@@ -17,50 +17,12 @@ ddoc.views = {};
 
 ddoc.views.items = {
     map: function(doc) {
-        if(doc.path) {
-            // doc.path should always be an array
-            var keys = [];
-            for(var i=0; i<doc.path.length; i++) {
-                keys.push(doc.path[i]);
-            }
-            // add its own id as shown here http://probablyprogramming.com/2008/07/04/storing-hierarchical-data-in-couchdb
-            keys.push(doc._id);
-
-            //keys.push(doc.points * -1);
-
-            emit(keys, doc);
+        if(doc.type === 'item') {
+            emit([doc._id, 0], doc);
+        } else if (doc.type === 'comment') {
+            emit([doc.thread_id, 1], doc);
         }
     }
-    /*
-    ,
-    reduce: function(keys, values, rereduce) {
-        var tree = {};
-        var current;
-        if(!rereduce) {
-            for (var i in keys) {
-                current = tree;
-                for (var j in keys[i][0]) {
-                    child = keys[i][0][j];
-                    if (current[child] == undefined) 
-                        current[child] = {};
-                    current = current[child];
-                } 
-                current['_data'] = keys[i][0];
-            }
-        } else if(rereduce) {
-            for(var i in values) {
-                current = values[i];
-                for (var j in keys[i][0]) {
-                    child = keys[i][0][j];
-                    if (current[child] == undefined) 
-                        current[child] = {};
-                    current = current[child];
-                } 
-            }
-        }
-        return tree;
-    }
-    */
 };
 
 ddoc.lists = {};
@@ -98,8 +60,7 @@ ddoc.lists.item = function(head, req) {
         };
 
         while(row = getRow()) {
-            row.indent = (row.key.length - 2) * 40;
-            data.rows.push(row);
+            data.rows.push(row.value);
         }
         var html = Mustache.to_html(this.templates.item, data, this.templates.partials);
         return html;
