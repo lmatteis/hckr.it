@@ -22,7 +22,12 @@ ddoc.views.items = {
             var points = util.getPoints(doc.voted);
             var score = util.findScore(points, doc.created_at);
 
-            emit(score, doc);
+            var value = {};
+            value.doc = doc;
+            value.domain = util.getDomain(doc.url);
+            value.points = util.getPoints(doc.voted);
+
+            emit(score, value);
         }
     }
 };
@@ -30,7 +35,9 @@ ddoc.views.items = {
 ddoc.views.item = {
     map: function(doc) {
         if(doc.type === 'item') {
-            emit([doc._id, 0], doc);
+            var util = require('views/lib/util');
+
+            emit([doc._id, 0], { doc: doc, domain: util.getDomain(doc.url), points: util.getPoints(doc.voted) });
         } else if (doc.type === 'comment') {
             emit([doc.thread_id, 1], doc);
         }
@@ -43,7 +50,6 @@ ddoc.lists.all = function(head, req) {
     provides('html', function(){
         var row,
             Mustache = require('views/lib/mustache');
-        var util = require('views/lib/util');
 
         var data = {
             title: 'All Items',
@@ -53,11 +59,11 @@ ddoc.lists.all = function(head, req) {
         };
 
         while(row = getRow()) {
-            var value = row.value;
-            value.points = util.getPoints(value.voted);
-            value.domain = util.getDomain(value.url);
+            var doc = row.value.doc;
+            doc.domain = row.value.domain;
+            doc.points = row.value.points;
 
-            data.rows.push(value);
+            data.rows.push(doc);
         }
         var html = Mustache.to_html(this.templates.all, data, this.templates.partials);
         return html;
@@ -68,10 +74,11 @@ ddoc.lists.item = function(head, req) {
     provides('html', function(){
         var row,
             Mustache = require('views/lib/mustache');
-        var util = require('views/lib/util');
 
-        var item = getRow()['value'];
-        item.points = util.getPoints(item.voted);
+        var value = getRow()['value'];
+        var item = value.doc;
+        item.points = value.points;
+        item.domain = value.domain;
 
         var data = {
             title: 'Item',
@@ -82,11 +89,10 @@ ddoc.lists.item = function(head, req) {
         };
 
         while(row = getRow()) {
-            var value = row.value;
-            value.points = util.getPoints(value.voted);
-            value.domain = util.getDomain(value.url);
+            var doc = row.value.doc;
+            doc.points = row.value.points;
 
-            data.rows.push(value);
+            data.rows.push(doc);
         }
         var html = Mustache.to_html(this.templates.item, data, this.templates.partials);
         return html;
