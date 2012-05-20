@@ -22,8 +22,6 @@ ddoc.views.items = {
             var points = util.getPoints(doc.voted);
             var score = util.findScore(points, doc.created_at);
 
-            doc.domain = util.getDomain(doc.url);
-
             emit(score, doc);
         }
     }
@@ -57,6 +55,8 @@ ddoc.lists.all = function(head, req) {
         while(row = getRow()) {
             var value = row.value;
             value.points = util.getPoints(value.voted);
+            value.domain = util.getDomain(value.url);
+
             data.rows.push(value);
         }
         var html = Mustache.to_html(this.templates.all, data, this.templates.partials);
@@ -84,6 +84,8 @@ ddoc.lists.item = function(head, req) {
         while(row = getRow()) {
             var value = row.value;
             value.points = util.getPoints(value.voted);
+            value.domain = util.getDomain(value.url);
+
             data.rows.push(value);
         }
         var html = Mustache.to_html(this.templates.item, data, this.templates.partials);
