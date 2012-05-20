@@ -8,13 +8,15 @@ function getCommentsByParentId(level, parentId) {
         return (k1 > k2) ? 1 : ( (k2 > k1) ? -1 : 0 );
     });
 
+    console.log($comments);
+
     $comments.each(function() {
         // let's clone it so it doesn't effect the actual HTML
         var $this = $(this).clone();
         $this.show();
         // show them by appending at this level
         if(!level) {
-            $('.comments').append($this);
+            $this.insertAfter('.comments');
         } else {
             // get the level width property
             // and add 40 to it
