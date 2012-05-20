@@ -1,4 +1,8 @@
 {{>head}}
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="site.js"></script>
+
 <tr>
     <td>
         {{#item}}
@@ -40,13 +44,13 @@
         {{/item}}
         <br><br>
         <table border="0">
-            <tbody>
+            <tbody class="comments">
                 {{#rows}}
-                <tr>
+                <tr doc_id="{{_id}}" parent_id="{{parent_id}}" points="{{points}}" style='display:none;'>
                     <td>
                         <table border="0">
                             <tbody>
-                                <tr><td><img src="http://ycombinator.com/images/s.gif" height="1" width="0"></td>
+                                <tr><td><img src="http://ycombinator.com/images/s.gif" height="1" width="0" class="level"></td>
                                     <td valign="top">
                                         <center><a id="up_3982076" onclick="return vote(this)" href="vote?for=3982076&amp;dir=up&amp;by=sktrdie&amp;auth=2db22be64bf6d8f65e63a62516b47f15cff3c2a6&amp;whence=%69%74%65%6d%3f%69%64%3d%33%39%38%32%30%34%31"><img src="http://ycombinator.com/images/grayarrow.gif" border="0" vspace="3" hspace="2"></a>
                                             <span id="down_3982076"></span>
