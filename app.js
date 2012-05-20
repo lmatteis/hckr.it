@@ -66,17 +66,23 @@ ddoc.lists.item = function(head, req) {
     provides('html', function(){
         var row,
             Mustache = require('views/lib/mustache');
+        var ranking = require('views/lib/ranking');
+
+        var item = getRow()['value'];
+        item.points = ranking.getPoints(item.voted);
 
         var data = {
             title: 'Item',
             username: req.userCtx.name,
             login: !(req.userCtx.name),
-            item: getRow()['value'], 
+            item: item, 
             rows: []
         };
 
         while(row = getRow()) {
-            data.rows.push(row.value);
+            var value = row.value;
+            value.points = ranking.getPoints(value.voted);
+            data.rows.push(value);
         }
         var html = Mustache.to_html(this.templates.item, data, this.templates.partials);
         return html;
@@ -134,6 +140,25 @@ ddoc.updates.item = function(doc, req) {
     }];
 }
 
+ddoc.updates.voteup = function(doc, req) {
+    var username = req.userCtx.name;
+    if(!doc.voted) doc.voted = [];
+    // push it only if it doesn't exist
+    var exists = false;
+    var message = '';
+    for(var i=0; i<doc.voted.length; i++) {
+        if(doc.voted[i] === username) { 
+            exists = true;
+            message = "you already upvoted this";
+        } 
+    }
+    if(!exists) { 
+        doc.voted.push(username);
+        message = 'upvoted!';
+    }
+    return [doc, message];
+}
+
 ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
     function forbidden(message) {    
         throw({forbidden : message});
@@ -159,13 +184,59 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         unauthorized("Must be logged on");
     }
 
-    if (newDoc.author) {
-        if(newDoc.author != username){
-          unauthorized("You may only update documents with author " + username);
-        }
-    }  
     unchanged("type");
 
+    if (newDoc.author) {
+        if(newDoc.author != username){
+            // we're editing another's document probably to upvote
+            // be sure nothing else is changed
+            if(newDoc.type == 'item') {
+                unchanged("created_at");
+                unchanged("author");
+                unchanged("title");
+                unchanged("url");
+            } else if(newDoc.type == 'comment') {
+                unchanged("created_at");
+                unchanged("author");
+                unchanged("thead_id");
+                unchanged("parent_id");
+                unchanged("text");
+            }
+          //unauthorized("You may only update documents with author " + username);
+        }
+    }  
+
+    function diffArrays (A, B) {
+        var strA = ":" + A.join("::") + ":";
+        var strB = ":" +  B.join(":|:") + ":";
+        var reg = new RegExp("(" + strB + ")","gi");
+        var strDiff = strA.replace(reg,"").replace(/^:/,"").replace(/:$/,"");
+        var arrDiff = strDiff.split("::");
+        return arrDiff;
+    }
+    function isArray( obj ) {
+        return toString.call(obj) === "[object Array]";
+    }
+
+    // TODO make sure other properties are of correct format as well.
+    // for now we're checking voted which is the most important one
+    // since it dictates the ranking algorithm
+    if(!isArray(newDoc.voted)) {
+        unauthorized("The voted property must be a JSON array!!");
+    }
+
+    // check that it has changed - if it has, we only want one element to change and that must be the current user
+    if(newDoc.voted && oldDoc.voted) {
+        var diff = diffArrays(newDoc.voted, oldDoc.voted); 
+        if(diff.length > 1) {
+            unauthorized("You've added too many votes, hacker!");
+        } else if(diff.length === 1) {
+            // great someone added a vote! let's make sure it's them
+            if(diff[0] !== username && diff[0] !== "") {
+                unauthorized("You're adding a vote as someone else! CRACKER SMACKER");
+            }
+        }
+    }
     var type = newDoc.type;
 
     switch(type) {

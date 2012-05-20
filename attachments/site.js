@@ -25,6 +25,20 @@ var comments = {
             }
             comments.getCommentsByParentId($this, $this.attr('doc_id'));
         });
+    },
+    voteBind: function() {
+        $('.voteup').click(function(e) {
+            var docId = $(this).attr('doc_id');
+            $.ajax({
+                url: '/_update/voteup/' + docId,
+                type: 'PUT',
+                dataType: 'json',
+                success: function() {
+                }
+            });
+            e.stopPropagation();
+            e.preventDefault();
+        });
     }
 };
 

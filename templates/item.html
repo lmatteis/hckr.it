@@ -13,8 +13,8 @@ $(function() {
             <tbody>
                 <tr>
                     <td>
-                        <center><a id="up_3982041" onclick="return vote(this)" href="vote?for=3982041&amp;dir=up&amp;by=sktrdie&amp;auth=127ef0f8ef1e580ab37d46d577e190952c045643&amp;whence=%69%74%65%6d%3f%69%64%3d%33%39%38%32%30%34%31"><img src="http://ycombinator.com/images/grayarrow.gif" border="0" vspace="3" hspace="2"></a>
-                            <span id="down_3982041"></span>
+                        <center><a class="voteup" doc_id="{{_id}}" href="vote?for={{_id}}&dir=up"><img src="/grayarrow.gif" border="0" vspace="3" hspace="2"></a>
+                            <span class="down_3982041"></span>
                         </center>
                     </td>
                     <td class="title"><a href="http://bootstrapchallenge.com/">{{title}}</a>
@@ -25,7 +25,7 @@ $(function() {
                 </tr>
                 <tr>
                     <td colspan="1"></td>
-                    <td class="subtext"><span>12 points</span>
+                    <td class="subtext"><span>{{points}} points</span>
                         by
                         <a href="user?id=alexandros">alexandros</a>
                         25 minutes ago |
