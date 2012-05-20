@@ -4,7 +4,7 @@ var couchapp = require('couchapp'),
 ddoc = { 
     _id:'_design/news',
     rewrites : [
-        {from:'/', to:'_list/all/items'},
+        {from:'/', to:'_list/all/items', query: { descending: "true" } },
         {from:'/item', to:'_list/item/item', query: { startkey: [":id"], endkey: [":id",{}] } },
         {from:'/login', to:'_show/login'},
         {from:'/submit', to:'_show/submit'},
@@ -16,8 +16,19 @@ ddoc = {
 ddoc.views = {};
 ddoc.views.items = {
     map: function(doc) {
+        // https://github.com/schmidek/News-aggregator/blob/master/views/rank/reduce.js
+        function findScore(points, jsonDate) { 
+            var s = points; 
+            var order = Math.log(Math.max(Math.abs(s),1)) / Math.log(10);
+            var sign = s > 0 ? 1 : (s<0 ? -1 : 0);
+            var seconds = (new Date(jsonDate).getTime()    /1000) - 1134028003;
+            return Math.round((order + sign * seconds / 45000) * 10000000) / 10000000; 
+        }
         if(doc.type === 'item') {
-            emit(doc.points, doc);
+            if(!doc.points) doc.points = 0;
+            // http://amix.dk/blog/post/19574
+            var score = findScore(doc.points, doc.created_at);
+            emit(score, doc);
         }
     }
 };
@@ -47,7 +58,9 @@ ddoc.lists.all = function(head, req) {
         };
 
         while(row = getRow()) {
-            data.rows.push(row.value);
+            var value = row.value;
+            if(!value.points) value.points = 0;
+            data.rows.push(value);
         }
         var html = Mustache.to_html(this.templates.all, data, this.templates.partials);
         return html;
@@ -111,7 +124,7 @@ ddoc.updates.item = function(doc, req) {
         doc = {};
         doc._id = req.uuid;
         // http://stackoverflow.com/questions/4812235/whats-the-best-way-to-store-datetimes-timestamps-in-couchdb
-        doc.created_at = JSON.stringify(new Date);
+        doc.created_at = JSON.parse(JSON.stringify(new Date));
         doc.author = req.userCtx.name;
     }
 
