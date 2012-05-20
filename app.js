@@ -17,7 +17,7 @@ ddoc.views = {};
 ddoc.views.items = {
     map: function(doc) {
         if(doc.type === 'item') {
-            var ranking = require('ranking');
+            var ranking = require('views/lib/ranking');
 
             var points = ranking.getPoints(doc.voted);
             var score = ranking.findScore(points, doc.created_at);
@@ -43,6 +43,7 @@ ddoc.lists.all = function(head, req) {
     provides('html', function(){
         var row,
             Mustache = require('views/lib/mustache');
+        var ranking = require('views/lib/ranking');
 
         var data = {
             title: 'All Items',
@@ -53,8 +54,7 @@ ddoc.lists.all = function(head, req) {
 
         while(row = getRow()) {
             var value = row.value;
-            var voted = value.voted;
-            if(!value.points) value.points = 0;
+            value.points = ranking.getPoints(value.voted);
             data.rows.push(value);
         }
         var html = Mustache.to_html(this.templates.all, data, this.templates.partials);
