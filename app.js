@@ -93,7 +93,7 @@ ddoc.lists.item = function(head, req) {
             title: 'Item',
             username: req.userCtx.name,
             login: !(req.userCtx.name),
-            item: getRow()["value"], 
+            item: getRow()['value'], 
             rows: []
         };
 
