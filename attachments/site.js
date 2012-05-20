@@ -28,7 +28,7 @@ var comments = {
     }
 };
 
-var header = {
+var auth = {
     logout: function() {
         $.ajax({
             url: '/_session',
@@ -43,9 +43,40 @@ var header = {
     },
     bind: function() {
         $('.logout').click(function(e) {
-            header.logout(); 
+            auth.logout(); 
             e.preventDefault();
             e.stopPropagation();
+        });
+        $('.login').submit(function(e) {
+            var data = $(this).serialize();
+            $.post('/_session', data)
+            .error(function(jqXHR) {
+                var j = JSON.parse(jqXHR.responseText);
+                $('.error').text(j.reason);
+            })
+            .success(function() {
+                $(location).attr('href', '/');
+            });
+            
+            e.preventDefault();
+        });
+    }
+};
+
+var item = {
+    submit: function() {
+        $('.item-submit').submit(function(e) {
+            var data = $(this).serialize();
+            $.post('/r', data)
+            .error(function(jqXHR) {
+                var j = JSON.parse(jqXHR.responseText);
+                $('.error').text(j.reason);
+            })
+            .success(function() {
+                $(location).attr('href', '/');
+            });
+
+            e.preventDefault();
         });
     }
 };

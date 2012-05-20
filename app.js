@@ -110,10 +110,14 @@ ddoc.updates.item = function(doc, req) {
     if(!doc) {
         doc = {};
         doc._id = req.uuid;
+        // http://stackoverflow.com/questions/4812235/whats-the-best-way-to-store-datetimes-timestamps-in-couchdb
+        doc.created_at = JSON.stringify(new Date);
+        doc.author = req.userCtx.name;
     }
 
     doc.title = title;
     doc.url = url;
+    doc.type = 'item';
     
     return [doc, {
         'headers' : {

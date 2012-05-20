@@ -1,8 +1,11 @@
 {{>head}}
+<tr>
+    <td>
   <b>Login</b><br />
   <br />
+  <span class='error' style='color:red'></span>
 
-  <form method="post" action="/_session">
+  <form class='login' method="post" action="/_session">
     <table border="0">
       <tr>
         <td>username:</td>
@@ -40,5 +43,7 @@
     </table><br />
     <input type="submit" value="create account" />
   </form>
+  </td>
+</tr>
 
 {{>tail}}

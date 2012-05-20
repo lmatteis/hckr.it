@@ -1,8 +1,13 @@
 {{>head}}
+<script>
+$(function() {
+item.submit();
+});
+</script>
 <tr>
     <td>
-        <form method="post" action="/r">
-            <input type="hidden" name="fnid" value="4lGWPNBAe8">
+        <form class='item-submit' method="post" action="/r">
+            <span class='error' style='color:red'></span>
             <table border="0">
                 <tbody>
                     <tr>
