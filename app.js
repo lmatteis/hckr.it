@@ -16,18 +16,12 @@ ddoc = {
 ddoc.views = {};
 ddoc.views.items = {
     map: function(doc) {
-        // https://github.com/schmidek/News-aggregator/blob/master/views/rank/reduce.js
-        function findScore(points, jsonDate) { 
-            var s = points; 
-            var order = Math.log(Math.max(Math.abs(s),1)) / Math.log(10);
-            var sign = s > 0 ? 1 : (s<0 ? -1 : 0);
-            var seconds = (new Date(jsonDate).getTime()    /1000) - 1134028003;
-            return Math.round((order + sign * seconds / 45000) * 10000000) / 10000000; 
-        }
         if(doc.type === 'item') {
-            if(!doc.points) doc.points = 0;
-            // http://amix.dk/blog/post/19574
-            var score = findScore(doc.points, doc.created_at);
+            var ranking = require('ranking');
+
+            var points = ranking.getPoints(doc.voted);
+            var score = ranking.findScore(points, doc.created_at);
+
             emit(score, doc);
         }
     }
@@ -59,6 +53,7 @@ ddoc.lists.all = function(head, req) {
 
         while(row = getRow()) {
             var value = row.value;
+            var voted = value.voted;
             if(!value.points) value.points = 0;
             data.rows.push(value);
         }
