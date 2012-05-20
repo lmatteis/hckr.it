@@ -1,10 +1,14 @@
 {{>head}}
 
-<script type="text/javascript" src="site.js"></script>
 
 <tr>
     <td>
         {{#item}}
+<script>
+$(function() {
+    comments.getCommentsByParentId(0, '{{_id}}');
+});
+</script>
         <table border="0">
             <tbody>
                 <tr>

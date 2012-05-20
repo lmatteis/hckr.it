@@ -1,0 +1,44 @@
+{{>head}}
+  <b>Login</b><br />
+  <br />
+
+  <form method="post" action="/_session">
+    <table border="0">
+      <tr>
+        <td>username:</td>
+
+        <td><input type="text" name="name" size="20" /></td>
+      </tr>
+
+      <tr>
+        <td>password:</td>
+
+        <td><input type="password" name="password" size="20" /></td>
+      </tr>
+    </table><br />
+    <input type="submit" value="login" />
+  </form><br />
+  <br />
+  <b>Create Account</b><br />
+  <br />
+
+  <form method="post" action="/y">
+    <input type="hidden" name="fnid" value="XXpvVEeBPM" />
+
+    <table border="0">
+      <tr>
+        <td>username:</td>
+
+        <td><input type="text" name="u" size="20" /></td>
+      </tr>
+
+      <tr>
+        <td>password:</td>
+
+        <td><input type="password" name="p" size="20" /></td>
+      </tr>
+    </table><br />
+    <input type="submit" value="create account" />
+  </form>
+
+{{>tail}}

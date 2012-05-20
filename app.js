@@ -6,14 +6,14 @@ ddoc = {
     rewrites : [
         {from:'/', to:'_list/all/items'},
         {from:'/item', to:'_list/item/item', query: { startkey: [":id"], endkey: [":id",{}] } },
-        {from:'/login', to:'login.html'},
-        {from:'/submit', to:'submit.html'},
+        {from:'/login', to:'_show/login'},
+        {from:'/submit', to:'_show/submit'},
+        {from:'/r', to:'_update/item'},
         {from:'/*', to:'*'}
     ]
 };
 
 ddoc.views = {};
-
 ddoc.views.items = {
     map: function(doc) {
         if(doc.type === 'item') {
@@ -75,11 +75,51 @@ ddoc.lists.item = function(head, req) {
     });
 }
 
-ddoc.updates = {};
 
+ddoc.shows = {};
+ddoc.shows.submit = function(doc, req) {
+    var Mustache = require('views/lib/mustache');
+
+    var data = {
+        title: 'Submit',
+        username: req.userCtx.name,
+        login: !(req.userCtx.name)
+    };
+
+    var html = Mustache.to_html(this.templates.submit, data, this.templates.partials);
+    return html;
+}
+ddoc.shows.login = function(doc, req) {
+    var Mustache = require('views/lib/mustache');
+
+    var data = {
+        title: 'Login',
+        username: req.userCtx.name,
+        login: !(req.userCtx.name)
+    };
+
+    var html = Mustache.to_html(this.templates.login, data, this.templates.partials);
+    return html;
+}
+
+ddoc.updates = {};
 ddoc.updates.item = function(doc, req) {
-    var title = req.form.title;
-    var url = req.form.url;
+    var title = req.form.t;
+    var url = req.form.u;
+
+    if(!doc) {
+        doc = {};
+        doc._id = req.uuid;
+    }
+
+    doc.title = title;
+    doc.url = url;
+    
+    return [doc, {
+        'headers' : {
+            'Location' : '/'
+        }
+    }];
 }
 
 ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {

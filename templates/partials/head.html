@@ -4,7 +4,14 @@
   <link rel="stylesheet" type="text/css" href=
   "layout.css">
   <title>{{title}}</title>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="site.js"></script>
+
+<script>
+$(function() {
+    header.bind();
+});
+</script>
 </head>
 
 <body>
@@ -31,7 +38,7 @@
               <td style="text-align:right;padding-right:4px;">
               <span class="pagetop">
               {{#username}}
-                <a href="/login">{{username}}</a> () | <a href="/logout">logout</a>
+                <a href="/login">{{username}}</a> () | <a class="logout" href="/logout">logout</a>
               {{/username}}
               {{#login}}
                 <a href="/login">login</a>
