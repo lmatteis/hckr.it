@@ -48,7 +48,13 @@ var comments = {
                 type: 'PUT',
                 data: data,
                 dataType: 'json',
-                success: function() {
+                complete: function(req) {
+                    if (req.status == 200 || req.status == 201 || req.status == 202) {
+                        $this.css('visibility', 'hidden'); 
+                    }
+                },
+                error: function() {
+
                 }
             });
             e.stopPropagation();
@@ -121,7 +127,7 @@ var auth = {
             var data = $(this).serialize();
             $.post('/_session', data)
             .error(function(jqXHR) {
-                var j = JSON.parse(jqXHR.responseText);
+                var j = $.parseJSON(jqXHR.responseText);
                 $('.error').text(j.reason);
             })
             .success(function() {
@@ -139,7 +145,7 @@ var item = {
             var data = $(this).serialize();
             $.post('/r', data)
             .error(function(jqXHR) {
-                var j = JSON.parse(jqXHR.responseText);
+                var j = $.parseJSON(jqXHR.responseText);
                 $('.error').text(j.reason);
             })
             .success(function() {
