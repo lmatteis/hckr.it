@@ -353,6 +353,14 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
             }
         }
     }
+    
+    if(newDoc.comments) {
+        for(var i in newDoc.comments) {
+            var comment = newDoc.comments[i];
+            if(!comment.text) forbidden("Comment text is required");
+        }
+    }
+
     var type = newDoc.type;
 
     switch(type) {
@@ -361,13 +369,6 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
             unchanged("author");
             require("title");
             require("url");
-            break;
-        case "comment": 
-            unchanged("created_at");
-            unchanged("author");
-            unchanged("thead_id");
-            unchanged("parent_id");
-            require("text");
             break;
     }
 }

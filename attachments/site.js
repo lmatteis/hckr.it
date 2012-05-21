@@ -72,7 +72,9 @@ var comments = {
                 data: data,
                 dataType: 'json',
                 complete: function() {
-                    location.reload();
+                    if (req.status == 200 || req.status == 201 || req.status == 202) {
+                        location.reload();
+                    }
                 }
             });
 
