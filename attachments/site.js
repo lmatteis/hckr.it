@@ -59,6 +59,27 @@ var comments = {
             e.preventDefault();
         });
 
+        $('.commentreply').click(function(e) {
+            var $this = $(this);
+            var $form = $('.addcomment').clone();
+
+            var commentId = $this.attr('comment_id');
+
+            // change the parent_id to be what we just clicked on
+            $form.find('[name=parent_id]').val(commentId);
+            var $submit = $form.find('input[type=submit]');
+            $submit.val('reply');
+            $cancel = $('<input type="button" class="cancelreply" value="cancel" />');
+            $cancel.click(function() {
+                $form.remove();
+            });
+            $form.append($cancel);
+
+            $form.insertAfter($this);
+
+            e.stopPropagation();
+            e.preventDefault();
+        });
     }
 };
 

@@ -44,11 +44,29 @@ ddoc.views.item = {
 
             var numcomments = util.getNumComments(doc.comments);
 
+            var comments = [];
+            for(var i in doc.comments) {
+                var c = doc.comments[i];
+                var comment = {};
+
+                // copy elements of comments since we
+                // can't modify the object itself
+                for(var x in c) {
+                    comment[x] = c[x];
+                }
+
+                comment.points = util.getPoints(c.voted);
+                comment.score = util.findScore(comment.points, c.comment_id);
+
+                comments.push(comment);
+            }
+
             emit(doc._id, {
                 doc: doc,
                 domain: util.getDomain(doc.url),
                 points: points,
-                numcomments: numcomments
+                numcomments: numcomments,
+                comments: comments
             });
         }
     }
@@ -76,6 +94,8 @@ ddoc.lists.all = function(head, req) {
 
             doc.counter = ++counter;
 
+            doc.owner = (doc.author == req.userCtx.name);
+
             data.rows.push(doc);
         }
         var html = Mustache.to_html(this.templates.all, data, this.templates.partials);
@@ -94,12 +114,20 @@ ddoc.lists.item = function(head, req) {
         doc.points = value.points;
         doc.numcomments = value.numcomments;
 
+        for(var i in value.comments) {
+            var comment = value.comments[i];
+            if(comment.author === req.userCtx.name) {
+                comment.owner = true;
+            }
+        }
+
         var data = {
             title: 'Item',
             username: req.userCtx.name,
             login: !(req.userCtx.name),
             item: doc,
-            comments: doc.comments
+            owner: doc.author == req.userCtx.name,
+            comments: value.comments
         };
 
         var html = Mustache.to_html(this.templates.item, data, this.templates.partials);
