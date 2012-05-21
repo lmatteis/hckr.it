@@ -24,7 +24,7 @@ exports.getPoints = function(voted) {
 }
 
 exports.getDomain = function(url) {
-    return url.match(/:\/\/(.[^/]+)/)[1];
+    return url.match(/:\/\/(www\.)?(.[^/:]+)/)[2];
 }
 
 exports.getNumComments = function(comments) {
