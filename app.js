@@ -66,11 +66,14 @@ ddoc.lists.all = function(head, req) {
             rows: []
         };
 
+        var counter = 0;
         while(row = getRow()) {
             var doc = row.value.doc;
             doc.domain = row.value.domain;
             doc.points = row.value.points;
             doc.numcomments = row.value.numcomments;
+
+            doc.counter = ++counter;
 
             data.rows.push(doc);
         }
@@ -88,6 +91,7 @@ ddoc.lists.item = function(head, req) {
         var doc = value.doc;
         doc.domain = value.domain;
         doc.points = value.points;
+        doc.numcomments = value.numcomments;
 
         var data = {
             title: 'Item',
@@ -140,6 +144,7 @@ ddoc.updates.item = function(doc, req) {
         // http://stackoverflow.com/questions/4812235/whats-the-best-way-to-store-datetimes-timestamps-in-couchdb
         doc.created_at = JSON.parse(JSON.stringify(new Date));
         doc.author = req.userCtx.name;
+        doc.voted = [doc.author];
     }
 
     doc.title = title;
