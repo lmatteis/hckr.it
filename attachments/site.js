@@ -71,7 +71,7 @@ var comments = {
                 type: 'PUT',
                 data: data,
                 dataType: 'json',
-                complete: function() {
+                complete: function(req) {
                     if (req.status == 200 || req.status == 201 || req.status == 202) {
                         location.reload();
                     }
