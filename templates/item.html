@@ -5,32 +5,17 @@
         {{#item}}
 <script>
 $(function() {
-    comments.getCommentsByParentId(0, '{{_id}}');
+    comments.getCommentsByParentId(0, '0');
 });
 </script>
         <table border="0">
             <tbody>
                 <tr>
-                    <td>
-                        <center><a class="voteup" doc_id="{{_id}}" href="vote?for={{_id}}&dir=up"><img src="/grayarrow.gif" border="0" vspace="3" hspace="2"></a>
-                            <span class="down_3982041"></span>
-                        </center>
-                    </td>
-                    <td class="title"><a href="{{url}}">{{title}}</a>
-                        <span class="comhead">
-                            ({{domain}})
-                        </span>
-                    </td>
+                    {{>itemhead}}
                 </tr>
                 <tr>
                     <td colspan="1"></td>
-                    <td class="subtext"><span>{{points}} points</span>
-                        by
-                        <a href="user?id=alexandros">alexandros</a>
-                        25 minutes ago |
-                        <a href="/r?fnid=XPOHefX5H9">flag</a>
-                        |
-                        <a href="item?id=3982041">5 comments</a></td>
+                    {{>itemsubhead}}
                 </tr>
                 <tr style="height:10px"></tr>
                 <tr>
@@ -62,12 +47,12 @@ $(function() {
                                         <div style="margin-top:2px; margin-bottom:-10px; ">
                                             <span class="comhead">{{points}} points by <a href="user?id=iusable">iusable</a>
                                                 16 minutes ago |
-                                                <a href="item?id=3982076">link</a></span>
+                                                <a href="#{{comment_id}}" name="{{comment_id}}">link</a></span>
                                         </div>
                                         <br>
                                         <span class="comment">
                                             <font color="#000000">
-                                            {{score}}     
+                                            {{text}}     
                                             </font>
                                         </span>
                                     </td>

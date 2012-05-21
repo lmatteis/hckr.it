@@ -5,29 +5,13 @@
             {{#rows}}
             <tr>
               <td align="right" valign="top" class="title">1.</td>
-
-              <td>
-                <center>
-                  <a class="voteup" doc_id="{{_id}}" href="vote?for={{_id}}&dir=up"
-                  name="up"><img src=
-                  "/grayarrow.gif"
-                  border="0" vspace="3" hspace="2"></a><span></span>
-                </center>
-              </td>
-
-              <td class="title"><a href=
-              "{{url}}" rel=
-              "nofollow">{{title}}</a> <span class=
-              "comhead">({{domain}})</span></td>
+                {{>itemhead}}
             </tr>
 
             <tr>
               <td colspan="2"></td>
+              {{>itemsubhead}}
 
-              <td class="subtext"><span>{{points}}
-              points</span> by <a href=
-              "/user?id={{author}}">{{author}}</a> <span class="created_at">{{created_at}}</span> |
-              <a href="/item?id={{_id}}">discuss</a></td>
             </tr>
 
             <tr style="height:5px">

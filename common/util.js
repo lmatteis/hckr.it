@@ -26,3 +26,11 @@ exports.getPoints = function(voted) {
 exports.getDomain = function(url) {
     return url.match(/:\/\/(.[^/]+)/)[1];
 }
+
+exports.getNumComments = function(comments) {
+    if(comments && comments.length) {
+        return comments.length;
+    } else {
+        return 0;
+    }
+}

@@ -1,6 +1,6 @@
 var comments = {
     getCommentsByParentId: function(level, parentId) {
-        var $comments = $('.comments [parent_id=' + parentId + ']');
+        var $comments = $('.comments [parent_id="' + parentId + '"]');
 
         // sort these comments by score
         $comments.sort(function(a, b) {
