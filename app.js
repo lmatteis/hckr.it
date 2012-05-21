@@ -96,6 +96,7 @@ ddoc.lists.all = function(head, req) {
             doc.numcomments = row.value.numcomments;
 
             doc.counter = ++counter;
+            doc.pretty_date = util.timeDifference(new Date(), new Date(doc.created_at));
 
             doc.owner = (doc.author == req.userCtx.name);
             if(util.inArray(username, doc.voted)) {
@@ -117,11 +118,13 @@ ddoc.lists.item = function(head, req) {
         var username = req.userCtx.name;
 
         var value = getRow()['value'];
+        var currDate = new Date();
         
         var doc = value.doc;
         doc.domain = value.domain;
         doc.points = value.points;
         doc.numcomments = value.numcomments;
+        doc.pretty_date = util.timeDifference(currDate, new Date(doc.created_at));
 
         // check if we upvoted already
         if(util.inArray(username, doc.voted)) {
@@ -141,6 +144,7 @@ ddoc.lists.item = function(head, req) {
             } else {
                 comment.owner = false;
             }
+            comment.pretty_date = util.timeDifference(currDate, new Date(comment.comment_id));
         }
 
         var data = {
