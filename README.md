@@ -20,7 +20,7 @@ This would enable anyone to easily host their own HN site, with their own topic.
 
 * Each `item` and all its `comments` are stored inside a single document. Why? Fuck it, that's why!
 * Here's what an `item` looks like:
-
+`
     {
        "_id": "784289f1ac926d7d9ab85b3a22005546",
        "_rev": "5-7d72e6583ddd567d700a242618c3ce6f",
@@ -51,3 +51,4 @@ This would enable anyone to easily host their own HN site, with their own topic.
            }
        ]
     } 
+`
