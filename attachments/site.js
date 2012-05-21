@@ -2,10 +2,10 @@ var comments = {
     getCommentsByParentId: function(level, parentId) {
         var $comments = $('.comments [parent_id=' + parentId + ']');
 
-        // sort these comments by points
+        // sort these comments by score
         $comments.sort(function(a, b) {
-            var k1 = parseInt($(a).attr('points'), 10); 
-            var k2 = parseInt($(b).attr('points'), 10);
+            var k1 = parseInt($(a).attr('score'), 10); 
+            var k2 = parseInt($(b).attr('score'), 10);
             return (k1 > k2) ? 1 : ( (k2 > k1) ? -1 : 0 );
         });
 
@@ -23,7 +23,7 @@ var comments = {
                 $this.find('.level').attr('width', parseInt(width, 10) + 40);
                 $this.insertAfter(level);
             }
-            comments.getCommentsByParentId($this, $this.attr('doc_id'));
+            comments.getCommentsByParentId($this, $this.attr('comment_id'));
         });
     },
     voteBind: function() {

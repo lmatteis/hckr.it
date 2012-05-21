@@ -4,8 +4,8 @@ var couchapp = require('couchapp'),
 ddoc = { 
     _id:'_design/news',
     rewrites : [
-        {from:'/', to:'_list/all/items', query: { descending: "true" } },
-        {from:'/item', to:'_list/item/item', query: { startkey: [":id"], endkey: [":id",{}] } },
+        {from:'/', to:'_list/all/all', query: { descending: "true" } },
+        {from:'/item', to:'_show/item/:id' },
         {from:'/login', to:'_show/login'},
         {from:'/submit', to:'_show/submit'},
         {from:'/r', to:'_update/item'},
@@ -14,7 +14,7 @@ ddoc = {
 };
 
 ddoc.views = {};
-ddoc.views.items = {
+ddoc.views.all = {
     map: function(doc) {
         if(doc.type === 'item') {
             var util = require('views/lib/util');
@@ -22,28 +22,14 @@ ddoc.views.items = {
             var points = util.getPoints(doc.voted);
             var score = util.findScore(points, doc.created_at);
 
-            var value = {};
-            value.doc = doc;
-            value.domain = util.getDomain(doc.url);
-            value.points = util.getPoints(doc.voted);
-
-            emit(score, value);
+            emit(score, {
+                doc: doc,
+                domain: util.getDomain(doc.url),
+                points: points
+            });
         }
     }
 };
-
-ddoc.views.item = {
-    map: function(doc) {
-        if(doc.type === 'item') {
-            var util = require('views/lib/util');
-
-            emit([doc._id, 0], { doc: doc, domain: util.getDomain(doc.url), points: util.getPoints(doc.voted) });
-        } else if (doc.type === 'comment') {
-            emit([doc.thread_id, 1], doc);
-        }
-    }
-};
-
 
 ddoc.lists = {};
 ddoc.lists.all = function(head, req) {
@@ -70,37 +56,27 @@ ddoc.lists.all = function(head, req) {
     });
 };
 
-ddoc.lists.item = function(head, req) {
-    provides('html', function(){
-        var row,
-            Mustache = require('views/lib/mustache');
+ddoc.shows = {};
+ddoc.shows.item = function(doc, req) {
+    var Mustache = require('views/lib/mustache');
+    var util = require('views/lib/util');
 
-        var value = getRow()['value'];
-        var item = value.doc;
-        item.points = value.points;
-        item.domain = value.domain;
+    doc.domain = util.getDomain(doc.url);
+    doc.points = util.getPoints(doc.voted);
 
-        var data = {
-            title: 'Item',
-            username: req.userCtx.name,
-            login: !(req.userCtx.name),
-            item: item, 
-            rows: []
-        };
+    var data = {
+        title: 'Item',
+        username: req.userCtx.name,
+        login: !(req.userCtx.name),
+        item: doc,
+        comments: doc.comments
+    };
 
-        while(row = getRow()) {
-            var doc = row.value.doc;
-            doc.points = row.value.points;
-
-            data.rows.push(doc);
-        }
-        var html = Mustache.to_html(this.templates.item, data, this.templates.partials);
-        return html;
-    });
+    var html = Mustache.to_html(this.templates.item, data, this.templates.partials);
+    return html;
 }
 
 
-ddoc.shows = {};
 ddoc.shows.submit = function(doc, req) {
     var Mustache = require('views/lib/mustache');
 

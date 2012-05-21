@@ -1,6 +1,5 @@
 {{>head}}
 
-
 <tr>
     <td>
         {{#item}}
@@ -48,8 +47,8 @@ $(function() {
         <br><br>
         <table border="0">
             <tbody class="comments">
-                {{#rows}}
-                <tr doc_id="{{_id}}" parent_id="{{parent_id}}" points="{{points}}" style='display:none;'>
+                {{#comments}}
+                <tr comment_id="{{comment_id}}" parent_id="{{parent_id}}" score="{{score}}" style='display:none;'>
                     <td>
                         <table border="0">
                             <tbody>
@@ -68,7 +67,7 @@ $(function() {
                                         <br>
                                         <span class="comment">
                                             <font color="#000000">
-                                            {{comment}}     
+                                            {{score}}     
                                             </font>
                                         </span>
                                     </td>
@@ -77,7 +76,7 @@ $(function() {
                         </table>
                     </td>
                 </tr>
-                {{/rows}}
+                {{/comments}}
             </tbody>
         </table>
         <br><br>
