@@ -20,35 +20,34 @@ This would enable anyone to easily host their own HN site, with their own topic.
 
 * Each `item` and all its `comments` are stored inside a single document. Why? Fuck it, that's why!
 * Here's what an `item` looks like:
-`
-    {
-       "_id": "784289f1ac926d7d9ab85b3a22005546",
-       "_rev": "5-7d72e6583ddd567d700a242618c3ce6f",
-       "created_at": "2012-05-20T21:09:52.045Z",
-       "author": "test",
-       "title": "Nottingam",
-       "url": "http://dfsf.com",
-       "type": "item",
-       "voted": [ 
-           "test"
-       ],
-       "comments": [
-           {
-               "comment_id": "2012-05-21T07:43:01.410Z",
-               "parent_id": 0,
-               "text": "Ciao Bella",
-               "voted": [
-               ],
-               "author": "test"
-           },
-           {
-               "comment_id": "2012-05-21T07:48:50.963Z",
-               "parent_id": "2012-05-21T07:43:01.410Z",
-               "text": "My born super",
-               "voted": [
-               ],
-               "author": "test"
-           }
-       ]
-    } 
-`
+
+        {
+           "_id": "784289f1ac926d7d9ab85b3a22005546",
+           "_rev": "5-7d72e6583ddd567d700a242618c3ce6f",
+           "created_at": "2012-05-20T21:09:52.045Z",
+           "author": "test",
+           "title": "Nottingam",
+           "url": "http://dfsf.com",
+           "type": "item",
+           "voted": [ 
+               "test"
+           ],
+           "comments": [
+               {
+                   "comment_id": "2012-05-21T07:43:01.410Z",
+                   "parent_id": 0,
+                   "text": "Ciao Bella",
+                   "voted": [
+                   ],
+                   "author": "test"
+               },
+               {
+                   "comment_id": "2012-05-21T07:48:50.963Z",
+                   "parent_id": "2012-05-21T07:43:01.410Z",
+                   "text": "My born super",
+                   "voted": [
+                   ],
+                   "author": "test"
+               }
+           ]
+        } 
