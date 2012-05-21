@@ -4,8 +4,8 @@ var comments = {
 
         // sort these comments by score
         $comments.sort(function(a, b) {
-            var k1 = parseInt($(a).attr('score'), 10); 
-            var k2 = parseInt($(b).attr('score'), 10);
+            var k1 = parseFloat($(a).attr('score'), 10); 
+            var k2 = parseFloat($(b).attr('score'), 10);
             return (k1 > k2) ? 1 : ( (k2 > k1) ? -1 : 0 );
         });
 
@@ -27,11 +27,26 @@ var comments = {
         });
     },
     voteBind: function() {
-        $('.voteup').click(function(e) {
-            var docId = $(this).attr('doc_id');
+        $('.voteup').live('click', function(e) {
+            var $this = $(this);
+            var docId = $this.attr('doc_id');
+            var commentId = $this.attr('comment_id');
+
+            var url = '';
+            var data = {};
+            if(docId) {
+                url = '/_update/voteup/' + docId;
+            } else if(commentId) {
+                // get the docId from the form
+                docId = $('.addcomment').attr('doc_id'); 
+                url = '/_update/commentvoteup/' + docId;
+                data.comment_id = commentId;
+            }
+
             $.ajax({
-                url: '/_update/voteup/' + docId,
+                url: url,
                 type: 'PUT',
+                data: data,
                 dataType: 'json',
                 success: function() {
                 }

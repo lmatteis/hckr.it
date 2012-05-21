@@ -77,11 +77,14 @@ ddoc.lists.all = function(head, req) {
     provides('html', function(){
         var row,
             Mustache = require('views/lib/mustache');
+        var util = require('views/lib/util');
+
+        var username = req.userCtx.name;
 
         var data = {
             title: 'All Items',
-            username: req.userCtx.name,
-            login: !(req.userCtx.name),
+            username: username,
+            login: !(username),
             rows: []
         };
 
@@ -95,6 +98,9 @@ ddoc.lists.all = function(head, req) {
             doc.counter = ++counter;
 
             doc.owner = (doc.author == req.userCtx.name);
+            if(util.inArray(username, doc.voted)) {
+                doc.upvoted = true;
+            }
 
             data.rows.push(doc);
         }
@@ -106,6 +112,9 @@ ddoc.lists.all = function(head, req) {
 ddoc.lists.item = function(head, req) {
     provides('html', function(){
         var Mustache = require('views/lib/mustache');
+        var util = require('views/lib/util');
+        
+        var username = req.userCtx.name;
 
         var value = getRow()['value'];
         
@@ -114,10 +123,23 @@ ddoc.lists.item = function(head, req) {
         doc.points = value.points;
         doc.numcomments = value.numcomments;
 
+        // check if we upvoted already
+        if(util.inArray(username, doc.voted)) {
+            doc.upvoted = true;
+        }
+
         for(var i in value.comments) {
             var comment = value.comments[i];
-            if(comment.author === req.userCtx.name) {
+            if(util.inArray(username, comment.voted)) {
+                comment.upvoted = true;
+            } else {
+                comment.upvoted = false;
+            }
+
+            if(comment.author === username) {
                 comment.owner = true;
+            } else {
+                comment.owner = false;
             }
         }
 
@@ -126,7 +148,7 @@ ddoc.lists.item = function(head, req) {
             username: req.userCtx.name,
             login: !(req.userCtx.name),
             item: doc,
-            owner: doc.author == req.userCtx.name,
+            owner: doc.author == username,
             comments: value.comments
         };
 
@@ -204,6 +226,23 @@ ddoc.updates.voteup = function(doc, req) {
     if(!doc.voted) doc.voted = [];
     doc.voted.push(username);
     return [doc, 'upvoted'];
+}
+ddoc.updates.commentvoteup = function(doc, req) {
+    var username = req.userCtx.name;
+    var comment_id = req.form.comment_id;
+
+    // find this comment_id
+    for(var i in doc.comments) {
+        var comment = doc.comments[i];
+        if(comment.comment_id === comment_id) {
+            // found our comment, upvote!
+            if(!comment.voted) comment.voted = [];
+            comment.voted.push(username);
+            break;
+        }
+    }
+
+    return [doc, 'upvoted comment'];
 }
 
 ddoc.updates.comment = function(doc, req) {
@@ -290,8 +329,8 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
 
     if(oldDoc && newDoc.voted && oldDoc.voted) {
         if(newDoc.voted.length !== oldDoc.voted.length) {
-            for(var i=0; i<newDoc.voted.length; i++) {
-                if(newDoc.voted[i] === username) { 
+            for(var i=0; i<oldDoc.voted.length; i++) {
+                if(oldDoc.voted[i] === username) { 
                     unauthorized("you already upvoted this");
                 } 
             }

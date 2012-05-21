@@ -34,3 +34,12 @@ exports.getNumComments = function(comments) {
         return 0;
     }
 }
+
+exports.inArray = function(value, arr) {
+    if(!arr) return false;
+    var i;
+    for (i=0; i<arr.length; i++) { 
+        if (arr[i] === value) return true; 
+    }
+    return false;
+}
