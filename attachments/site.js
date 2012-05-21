@@ -39,6 +39,26 @@ var comments = {
             e.stopPropagation();
             e.preventDefault();
         });
+    },
+    commentBind: function() {
+        $('.addcomment').live('submit', function(e) {
+            var $this = $(this);
+            var data = $this.serialize();
+            var docId = $this.attr('doc_id');
+            $.ajax({
+                url: '/_update/comment/' + docId,
+                type: 'PUT',
+                data: data,
+                dataType: 'json',
+                complete: function() {
+                    location.reload();
+                }
+            });
+
+            e.stopPropagation();
+            e.preventDefault();
+        });
+
     }
 };
 

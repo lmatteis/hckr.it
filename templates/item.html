@@ -6,6 +6,7 @@
 <script>
 $(function() {
     comments.getCommentsByParentId(0, '0');
+    comments.commentBind();
 });
 </script>
         <table border="0">
@@ -20,7 +21,9 @@ $(function() {
                 <tr style="height:10px"></tr>
                 <tr>
                     <td></td>
-                    <td><form method="post" action="/r"><input type="hidden" name="fnid" value="B571URQDJC"><textarea name="text" rows="6" cols="60"></textarea>
+                    <td><form method="post" action="/r" class="addcomment" doc_id="{{_id}}">
+                        <input type="hidden" name="parent_id" value="0" />
+                    <textarea name="text" rows="6" cols="60"></textarea>
                             <br><br>
                             <input type="submit" value="add comment">
                         </form>
@@ -54,6 +57,9 @@ $(function() {
                                             <font color="#000000">
                                             {{text}}     
                                             </font>
+                                            {{#username}}
+                                            <p><font size="1"><u><a href="/reply?id={{_id}}&parent_id={{comment_id}}">reply</a></u></font></p>
+                                            {{/username}}
                                         </span>
                                     </td>
                                 </tr>

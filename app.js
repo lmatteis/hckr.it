@@ -8,6 +8,7 @@ ddoc = {
         {from:'/item', to:'_list/item/item', query: { key: ":id" } },
         {from:'/login', to:'_show/login'},
         {from:'/submit', to:'_show/submit'},
+        {from:'/reply', to:'_show/reply'},
         {from:'/r', to:'_update/item'},
         {from:'/*', to:'*'}
     ]
@@ -132,6 +133,18 @@ ddoc.shows.login = function(doc, req) {
     var html = Mustache.to_html(this.templates.login, data, this.templates.partials);
     return html;
 }
+ddoc.shows.reply = function(doc, req) {
+    var Mustache = require('views/lib/mustache');
+
+    var data = {
+        title: 'Reply',
+        username: req.userCtx.name,
+        login: !(req.userCtx.name)
+    };
+
+    var html = Mustache.to_html(this.templates.reply, data, this.templates.partials);
+    return html;
+}
 
 ddoc.updates = {};
 ddoc.updates.item = function(doc, req) {
@@ -161,20 +174,24 @@ ddoc.updates.item = function(doc, req) {
 ddoc.updates.voteup = function(doc, req) {
     var username = req.userCtx.name;
     if(!doc.voted) doc.voted = [];
-    // push it only if it doesn't exist
-    var exists = false;
-    var message = '';
-    for(var i=0; i<doc.voted.length; i++) {
-        if(doc.voted[i] === username) { 
-            exists = true;
-            message = "you already upvoted this";
-        } 
-    }
-    if(!exists) { 
-        doc.voted.push(username);
-        message = 'upvoted!';
-    }
-    return [doc, message];
+    doc.voted.push(username);
+    return [doc, 'upvoted'];
+}
+
+ddoc.updates.comment = function(doc, req) {
+    if(!doc.comments) doc.comments = [];
+    var author = req.userCtx.name;
+    var comment = {
+        comment_id: JSON.parse(JSON.stringify(new Date)),
+        parent_id: req.form.parent_id,
+        text: req.form.text,
+        voted: [author],
+        author: author
+    };
+
+    doc.comments.push(comment);
+
+    return [doc, 'commented'];
 }
 
 ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
@@ -243,8 +260,18 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         unauthorized("The voted property must be a JSON array!!");
     }
 
+    if(oldDoc && newDoc.voted && oldDoc.voted) {
+        if(newDoc.voted.length !== oldDoc.voted.length) {
+            for(var i=0; i<newDoc.voted.length; i++) {
+                if(newDoc.voted[i] === username) { 
+                    unauthorized("you already upvoted this");
+                } 
+            }
+        }
+    }
+
     // check that it has changed - if it has, we only want one element to change and that must be the current user
-    if(newDoc.voted && oldDoc.voted) {
+    if(oldDoc && newDoc.voted && oldDoc.voted) {
         var diff = diffArrays(newDoc.voted, oldDoc.voted); 
         if(diff.length > 1) {
             unauthorized("You've added too many votes, hacker!");
