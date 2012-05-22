@@ -119,6 +119,45 @@ var auth = {
             }
         });
     },
+    signup: function($form) {
+        var username = $form.find('[name=u]').val();
+        var password = $form.find('[name=p]').val();
+
+        var userDoc = {
+            name: username,
+            password: password,
+            roles: [],
+            type: 'user',
+            _id: 'org.couchdb.user:' + encodeURIComponent(username)
+        };
+        $.ajax({
+            url: '/_users/' + userDoc._id,
+            type: 'PUT',
+            data: JSON.stringify(userDoc),
+            dataType: 'json',
+            contentType: 'application/json',
+            complete: function(req) {
+                var resp = $.parseJSON(req.responseText);
+                if (req.status == 200 || req.status == 201 || req.status == 202) {
+                    auth.login(username, password);
+                }
+            },
+            error: function(req) {
+                var j = $.parseJSON(req.responseText);
+                $('.signup_error').text(j.reason);
+            }
+        });
+    },
+    login: function(username, password) {
+        $.post('/_session', { name: username, password: password })
+        .error(function(req) {
+            var j = $.parseJSON(req.responseText);
+            $('.login_error').text(j.reason);
+        })
+        .success(function() {
+            $(location).attr('href', '/');
+        });
+    },
     bind: function() {
         $('.logout').click(function(e) {
             auth.logout(); 
@@ -126,17 +165,18 @@ var auth = {
             e.stopPropagation();
         });
         $('.login').submit(function(e) {
-            var data = $(this).serialize();
-            $.post('/_session', data)
-            .error(function(jqXHR) {
-                var j = $.parseJSON(jqXHR.responseText);
-                $('.error').text(j.reason);
-            })
-            .success(function() {
-                $(location).attr('href', '/');
-            });
+            var $form = $(this);
+            var username = $form.find('[name=name]').val();
+            var password = $form.find('[name=password]').val();
+
+            auth.login(username, password);
             
             e.preventDefault();
+        });
+        $('.signup').submit(function(e) {
+            auth.signup($(this)); 
+            e.preventDefault();
+            e.stopPropagation();
         });
     }
 };
