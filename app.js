@@ -115,7 +115,7 @@ ddoc.lists.all = function(head, req) {
         var username = req.userCtx.name;
 
         var data = {
-            title: 'All Items | ',
+            title: '',
             username: username,
             login: !(username),
             rows: []
