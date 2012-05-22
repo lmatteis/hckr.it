@@ -10,22 +10,20 @@
                         <td valign="top">user:</td>
                         <td>{{name}}</td>
                     </tr>
+                    <!--
                     <tr>
                         <td valign="top">created:</td>
                         <td>1413 days ago</td>
                     </tr>
+                    -->
                     <tr>
                         <td valign="top">karma:</td>
                         <td>{{karma}}</td>
                     </tr>
                     <tr>
-                        <td valign="top">avg:</td>
-                        <td>.14</td>
-                    </tr>
-                    <tr>
                         <td valign="top">about:</td>
                         <td>
-                            <textarea cols="60" rows="7" wrap="virtual" name="about">Working on my first startup: http://udeployer.com/ More about me on http://pseudocodice.com/</textarea>
+                            <textarea cols="60" rows="7" wrap="virtual" name="about"></textarea>
                             <font
                             size="-2">
                                 <a href="formatdoc"><font color="#afafaf">help</font></a>
@@ -35,73 +33,25 @@
                     <tr>
                         <td valign="top">email:</td>
                         <td>
-                            <input type="text" name="email" value="lmatteis@gmail.com" size="60">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">notifo:</td>
-                        <td>
-                            <input type="text" name="notifo" value="" size="60">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">showdead:</td>
-                        <td>
-                            <select name="showdead">
-                                <option>yes</option>
-                                <option selected="">no</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">noprocrast:</td>
-                        <td>
-                            <select name="noprocrast">
-                                <option>yes</option>
-                                <option selected="">no</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">maxvisit:</td>
-                        <td>
-                            <input type="text" name="maxvisit" value="20" size="16">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">minaway:</td>
-                        <td>
-                            <input type="text" name="minaway" value="180" size="16">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">delay:</td>
-                        <td>
-                            <input type="text" name="delay" value="0" size="16">
+                            <input type="text" name="email" value="" size="60">
                         </td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
-                            <a href="changepw"><u>change password</u></a>
+                            <a href="/changepw"><u>change password</u></a>
                         </td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
-                            <a href="saved?id=sktrdie"><u>saved stories</u></a>
+                            <a href="/saved?id={{name}}"><u>saved stories</u></a>
                         </td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
-                            <a href="submitted?id=sktrdie"><u>submissions</u></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <a href="threads?id=sktrdie"><u>comments</u></a>
+                            <a href="/submitted?id={{name}}"><u>submissions</u></a>
                         </td>
                     </tr>
                 </tbody>
