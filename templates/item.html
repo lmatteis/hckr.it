@@ -21,8 +21,11 @@ $(function() {
                 <tr style="height:10px"></tr>
                 <tr>
                     <td></td>
-                    <td><form method="post" action="/r" class="addcomment" doc_id="{{_id}}">
+                    <td>
+                    <form method="post" action="/r" class="addcomment" doc_id="{{_id}}">
                         <input type="hidden" name="parent_id" value="0" />
+                    <span style="color:red" class="error"></span>
+                    <br />
                     <textarea name="text" rows="6" cols="60"></textarea>
                             <br><br>
                             <input type="submit" value="add comment">

@@ -428,6 +428,15 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
             require("url");
             break;
     }
+
+    // make sure url is formatted correctly
+    function isUrl(s) {
+        return s.match(/(^|\s)((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi);
+    }
+
+    if(!isUrl(newDoc.url)) {
+        forbidden("URL is formatted incorrectly");
+    }
 }
 
 ddoc.views.lib = couchapp.loadFiles('./common');

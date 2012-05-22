@@ -75,6 +75,12 @@ var comments = {
                     if (req.status == 200 || req.status == 201 || req.status == 202) {
                         location.reload();
                     }
+                },
+                error: function(req) {
+                    var j = $.parseJSON(req.responseText);
+                    var $error = $this.find('.error');
+                    $error.show();
+                    $error.text(j.reason)
                 }
             });
 
@@ -84,7 +90,8 @@ var comments = {
 
         $('.commentreply').click(function(e) {
             var $this = $(this);
-            var $form = $('.addcomment').clone();
+            $('.error').hide();
+            var $form = $('.addcomment:first').clone();
 
             var commentId = $this.attr('comment_id');
 
@@ -98,7 +105,7 @@ var comments = {
             });
             $form.append($cancel);
 
-            $form.insertAfter($this);
+            $form.insertAfter($this.parent());
 
             e.stopPropagation();
             e.preventDefault();
