@@ -10,6 +10,7 @@ ddoc = {
         {from:'/submit', to:'_show/submit'},
         {from:'/reply', to:'_show/reply'},
         {from:'/r', to:'_update/item'},
+        {from:'/karma', to:'_view/karma', query: { group: "true", key: ":user" } },
         {from:'/*', to:'*'}
     ]
 };
@@ -71,6 +72,23 @@ ddoc.views.item = {
         }
     }
 };
+
+ddoc.views.karma = {
+    map: function(doc) {
+        if(doc.type === 'item') {
+            var util = require('views/lib/util');
+
+            var points = util.getPoints(doc.voted);
+
+            for(var i in doc.comments) {
+                var comment = doc.comments[i];
+                emit(comment.author, util.getPoints(comment.voted));
+            }
+            emit(doc.author, points);
+        }
+    },
+    reduce: '_sum'
+}
 
 ddoc.lists = {};
 ddoc.lists.all = function(head, req) {
@@ -148,7 +166,7 @@ ddoc.lists.item = function(head, req) {
         }
 
         var data = {
-            title: 'Item',
+            title: doc.title,
             username: req.userCtx.name,
             login: !(req.userCtx.name),
             item: doc,

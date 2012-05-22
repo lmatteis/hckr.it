@@ -198,3 +198,14 @@ var item = {
         });
     }
 };
+
+var karma = {
+    getKarma: function() {
+        var username = $('.username').text();
+        if(!username) return;
+        $.getJSON('/karma', { user: username }, function(data) {
+            var karma = data.rows[0].value;
+            $('.karma').text(karma);
+        });
+    }
+}

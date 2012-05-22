@@ -3,7 +3,7 @@
 <head>
   <link rel="stylesheet" type="text/css" href=
   "layout.css">
-  <title>{{title}}</title>
+  <title>{{title}} | hckr.it</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="site.js"></script>
 
@@ -11,6 +11,7 @@
 $(function() {
     auth.bind();
     comments.voteBind();
+    karma.getKarma();
 });
 </script>
 </head>
@@ -39,7 +40,7 @@ $(function() {
               <td style="text-align:right;padding-right:4px;">
               <span class="pagetop">
               {{#username}}
-                <a href="/login">{{username}}</a> () | <a class="logout" href="/logout">logout</a>
+                <a class="username" href="/login">{{username}}</a> (<span class="karma"></span>) | <a class="logout" href="/logout">logout</a>
               {{/username}}
               {{#login}}
                 <a href="/login">login</a>
