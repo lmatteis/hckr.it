@@ -6,11 +6,11 @@ ddoc = {
     rewrites : [
         {from:'/', to:'_list/all/all', query: { descending: "true" } },
         {from:'/item', to:'_list/item/item', query: { key: ":id" } },
+        {from:'/user', to:'_list/user/user', query: { key: ":id", group: "true" } },
         {from:'/login', to:'_show/login'},
         {from:'/submit', to:'_show/submit'},
         {from:'/reply', to:'_show/reply'},
         {from:'/r', to:'_update/item'},
-        {from:'/karma', to:'_view/karma', query: { group: "true", key: ":user" } },
         {from:'/*', to:'*'}
     ]
 };
@@ -73,7 +73,7 @@ ddoc.views.item = {
     }
 };
 
-ddoc.views.karma = {
+ddoc.views.user = {
     map: function(doc) {
         if(doc.type === 'item') {
             var util = require('views/lib/util');
@@ -82,12 +82,27 @@ ddoc.views.karma = {
 
             for(var i in doc.comments) {
                 var comment = doc.comments[i];
-                emit(comment.author, util.getPoints(comment.voted));
+                emit(comment.author, { points: util.getPoints(comment.voted) });
             }
-            emit(doc.author, points);
+            emit(doc.author, { points: points });
         }
     },
-    reduce: '_sum'
+    reduce: function (key, values, rereduce) {
+        var ret = {
+            totalPoints: 0
+        };
+        if(!rereduce) {
+            for(var i in values) {
+                ret.totalPoints += values[i].points;
+            }
+        } else {
+            for(var i in values) {
+                ret.totalPoints += values[i].totalPoints;
+            }
+        }
+
+        return ret;
+    }
 }
 
 ddoc.lists = {};
@@ -175,6 +190,30 @@ ddoc.lists.item = function(head, req) {
         };
 
         var html = Mustache.to_html(this.templates.item, data, this.templates.partials);
+        return html;
+    });
+}
+
+ddoc.lists.user = function(head, req) {
+    provides('html', function(){
+        var Mustache = require('views/lib/mustache');
+
+        var username = req.userCtx.name;
+        var row = getRow();
+        var value = row.value;
+
+        var user = {};
+        user.name = row.key;
+        user.karma = value.totalPoints;
+
+        var data = {
+            title: username,
+            username: username,
+            login: !(username),
+            user: user
+        };
+
+        var html = Mustache.to_html(this.templates.user, data, this.templates.partials);
         return html;
     });
 }
