@@ -12,6 +12,14 @@ And then simply push this source code to your couchdb instance:
 
     couchapp push app.js http://yourcouch.com/dbname
 
+## Deploying to IrisCouch
+
+If you want to install this app yourself, I strongly advise using the great [IrisCouch](http://www.iriscouch.com/) hosting service. It's free to start with and comes with a great pricing plan. This is where [hckr.it](http://www.hckr.it/) is hosted.
+
+Simply click on the big "Sign Up Now" button on their homepage and create your own Couch instance. You should get a http://foo.iriscouch.com domain. So to put hckr.it on it you can do:
+
+    couchapp push app.js http://username:password@foo.iriscouch.com
+
 ## Beware! I was drinking lots of coffee when I wrote this
 
 This is basically a Hacker News clone for CouchDB. As a Couchapp. 
@@ -55,4 +63,18 @@ Here's what an `item` looks like:
        ]
     } 
 
+But what about document conflicts? Easy, I deal
+with document conflicts on the Browser. Resend the request if it failed. Simple and relaxed approach.
 
+### Front page order
+
+Each `item` has a `voted` property which is an array of all the users
+that have "upvoted" that item. In my `all` view I calculate the `score` based on the number of items in the voted array (which I call `points`) and the `created_at` property.
+
+Then I simply `emit()` this score as the key of my view, which is then naturally ordered. This is the heart of the ranking algorithm and the order of the front-page, as well as comments.
+
+### Designed for efficiency
+
+Couch does only the very necessary. The rest is left to the browser to do. The hierarchy of the comments for example is done by the browser. However, everything is returned nicely by couch so that search engines can crawl it easily. 
+
+The HTML returned is also the same as the one on Hacker News. This enables the re-use of already built crawlers and add-ons.
