@@ -115,7 +115,7 @@ ddoc.lists.all = function(head, req) {
         var username = req.userCtx.name;
 
         var data = {
-            title: 'All Items',
+            title: 'All Items | ',
             username: username,
             login: !(username),
             rows: []
@@ -181,7 +181,7 @@ ddoc.lists.item = function(head, req) {
         }
 
         var data = {
-            title: doc.title,
+            title: doc.title + ' | ',
             username: req.userCtx.name,
             login: !(req.userCtx.name),
             item: doc,
@@ -207,7 +207,7 @@ ddoc.lists.user = function(head, req) {
         user.karma = value.totalPoints;
 
         var data = {
-            title: user.name,
+            title: user.name + ' | ',
             username: username,
             login: !(username),
             user: user
@@ -224,7 +224,7 @@ ddoc.shows.submit = function(doc, req) {
     var Mustache = require('views/lib/mustache');
 
     var data = {
-        title: 'Submit',
+        title: 'Submit | ',
         username: req.userCtx.name,
         login: !(req.userCtx.name)
     };
@@ -236,7 +236,7 @@ ddoc.shows.login = function(doc, req) {
     var Mustache = require('views/lib/mustache');
 
     var data = {
-        title: 'Login',
+        title: 'Login | ',
         username: req.userCtx.name,
         login: !(req.userCtx.name)
     };
@@ -248,7 +248,7 @@ ddoc.shows.reply = function(doc, req) {
     var Mustache = require('views/lib/mustache');
 
     var data = {
-        title: 'Reply',
+        title: 'Reply | ',
         username: req.userCtx.name,
         login: !(req.userCtx.name)
     };
