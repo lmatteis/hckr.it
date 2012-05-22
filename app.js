@@ -207,7 +207,7 @@ ddoc.lists.user = function(head, req) {
         user.karma = value.totalPoints;
 
         var data = {
-            title: username,
+            title: user.name,
             username: username,
             login: !(username),
             user: user
