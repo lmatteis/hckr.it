@@ -373,6 +373,41 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         return (array1.sort().join(',') === array2.sort().join(','));
     }
 
+    function invalidDate(dateStr) {
+        var date = new Date(dateStr);
+        if(date === 'Invalid Date') return true;
+
+        // this current date shouldn't be more than 1 minute before NOW
+
+    }
+
+    // takes care of making sure votes are the same
+    function validateVotes(newVotes, oldVotes) {
+        if(!sameArray(newVotes, oldVotes)) { // means arrays are different - either upvote or hijack
+            // be sure the new array is the same size  +1 (the new vote)
+            if((newVotes.length - 1) !== oldVotes.length) {
+                unauthorized("The number of votes you're adding doesn't match. You're fucking shit up!");
+            }
+
+            // since it's an upvote, check that we didn't vote it already
+            for(var i=0; i<oldVotes.length; i++) {
+                if(oldVotes[i] === username) { 
+                    unauthorized("You already upvoted this");
+                } 
+            }
+
+            var diff = diffArrays(newVotes, oldVotes); 
+            if(diff.length > 1) {
+                unauthorized("You've added too many votes, hacker!");
+            } else if(diff.length === 1) { // seems like a legit vote - see if it's the username
+                var newVote = diff[0];
+                if(newVote !== username) {
+                    unauthorized("You're adding a vote as someone else! CRACKER SMACKER");
+                }
+            }
+        }
+    }
+
     // are we logged in?
     var username = userCtx.name;
     if(!username || typeof username != "string" || username.length<1){
@@ -401,10 +436,23 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
             break;
     }
 
+
+    // if we're creating a document the first time, the author must be the username
+    if(!oldDoc) {
+        if(newDoc.author !== username) {
+            forbidden("You can't create a document with author as someone else other than you");
+        }
+    }
+
+    // check format of date
+    if(invalidDate(newDoc.created_at)) {
+        forbidden("Invalid date");
+    }
+
     // in case we're editing someone elses document, ONLY for voting
     // so make sure all the other fields are unchanged
-    if(newDoc.author != username){
-        if(newDoc.type == 'item') {
+    if(newDoc.author !== username){
+        if(newDoc.type === 'item') {
             unchanged("created_at");
             unchanged("author");
             unchanged("title");
@@ -420,27 +468,9 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         unauthorized("The voted property must be a JSON array!!");
     }
 
-    // check we've voted an item
+    // check we've voted an item and that the votes are valid
     if(oldDoc) {
-        if(!sameArray(newDoc.voted, oldDoc.voted)) { // means arrays are different - either upvote or hijack
-            // since it's an upvote, check that we didn't vote it already
-            for(var i=0; i<oldDoc.voted.length; i++) {
-                if(oldDoc.voted[i] === username) { 
-                    unauthorized("you already upvoted this");
-                } 
-            }
-
-            var diff = diffArrays(newDoc.voted, oldDoc.voted); 
-            if(diff.length > 1) {
-                unauthorized("You've added too many votes, hacker!");
-            } else if(diff.length === 1) { // seems like a legit vote - see if it's the username
-                var newVote = diff[0];
-                if(newVote !== username) {
-                    unauthorized("You're adding a vote as someone else! CRACKER SMACKER");
-                }
-            }
-        }
-        
+        validateVotes(newDoc.voted, oldDoc.voted);
     }
     
     if(newDoc.comments) {
