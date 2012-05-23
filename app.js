@@ -373,12 +373,12 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         return (array1.sort().join(',') === array2.sort().join(','));
     }
 
-    function invalidDate(dateStr) {
+    function validDate(dateStr) {
         var date = new Date(dateStr);
-        if(date === 'Invalid Date') return true;
+        if(date == 'Invalid Date') return false;
 
         // this current date shouldn't be more than 1 minute before NOW
-
+        return true;
     }
 
     // takes care of making sure votes are the same
@@ -436,17 +436,11 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
             break;
     }
 
-
     // if we're creating a document the first time, the author must be the username
     if(!oldDoc) {
         if(newDoc.author !== username) {
             forbidden("You can't create a document with author as someone else other than you");
         }
-    }
-
-    // check format of date
-    if(invalidDate(newDoc.created_at)) {
-        forbidden("Invalid date");
     }
 
     // in case we're editing someone elses document, ONLY for voting
@@ -460,12 +454,26 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         } 
     }
 
+    // check format of date
+    if(!validDate(newDoc.created_at)) {
+        forbidden("Invalid date");
+    }
 
     // TODO make sure other properties are of correct format as well.
     // for now we're checking voted which is the most important one
     // since it dictates the ranking algorithm
     if(!isArray(newDoc.voted)) {
         unauthorized("The voted property must be a JSON array!!");
+    }
+
+    // when creating a new doc, the voted property must have 1 item in it, with this username
+    if(!oldDoc) {
+        if(!newDoc.voted.length) {
+            unauthorized("The voted array is empty!")
+        }
+        if(newDoc.voted[0] !== username) {
+            unauthorized("The voted array must have your user in it")
+        }
     }
 
     // check we've voted an item and that the votes are valid
