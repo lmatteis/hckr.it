@@ -378,6 +378,11 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         if(date == 'Invalid Date') return false;
 
         // this current date shouldn't be more than 1 minute before NOW
+        var elapsed = new Date() - date;
+        var msPerMinute = 60 * 1000;
+        var minutesPassed = Math.round(elapsed/msPerMinute)
+
+        if(minutesPassed > 1) return false;
         return true;
     }
 
