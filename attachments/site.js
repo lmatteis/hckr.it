@@ -47,14 +47,16 @@ var comments = {
                 url: url,
                 type: 'PUT',
                 data: data,
-                dataType: 'json',
                 complete: function(req) {
                     if (req.status == 200 || req.status == 201 || req.status == 202) {
                         $this.css('visibility', 'hidden'); 
                     }
                 },
-                error: function() {
-
+                error: function(req) {
+                    var j = $.parseJSON(req.responseText);
+                    if(j.reason === 'Must be logged on') {
+                        $(location).attr('href', '/login');
+                    }
                 }
             });
             e.stopPropagation();
