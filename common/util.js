@@ -78,3 +78,16 @@ exports.timeDifference = function(current, previous) {
          return  Math.round(elapsed/msPerYear ) + ' years ago';   
     }
 }
+
+exports.formatdoc = function(content) {
+    var newlines = '[(\\r)?\\n]+';
+
+    // first remove the newlines from the beginning and end of the content
+    content = content.replace(new RegExp('^' + newlines, 'g'), '');
+    content = content.replace(new RegExp(newlines + '$', 'g'), '');
+
+    // then replace each newlines with the paragraphs
+    content = '<p>' + content.replace(new RegExp(newlines, 'g'), '</p><p>') + '</p>';
+
+    return content;
+}

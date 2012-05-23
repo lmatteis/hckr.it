@@ -75,6 +75,7 @@ ddoc.views.item = {
 
                 comment.points = util.getPoints(c.voted);
                 comment.score = util.findScore(comment.points, c.comment_id);
+                comment.text = util.formatdoc(comment.text);
 
                 comments.push(comment);
             }
