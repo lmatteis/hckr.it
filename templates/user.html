@@ -23,25 +23,35 @@
                     <tr>
                         <td valign="top">about:</td>
                         <td>
-                            <textarea cols="60" rows="7" wrap="virtual" name="about"></textarea>
+                            {{#myprofile}}
+                            <textarea cols="60" rows="7" wrap="virtual" name="about">{{about}}</textarea>
                             <font
                             size="-2">
                                 <a href="formatdoc"><font color="#afafaf">help</font></a>
                                 </font>
+                            {{/myprofile}}
+                            {{^myprofile}}
+                                {{about}}
+                            {{/myprofile}}
                         </td>
                     </tr>
+                    {{#myprofile}}
                     <tr>
                         <td valign="top">email:</td>
                         <td>
                             <input type="text" name="email" value="" size="60">
                         </td>
                     </tr>
+                    {{/myprofile}}
+                    <!--
                     <tr>
                         <td></td>
                         <td>
                             <a href="/changepw"><u>change password</u></a>
                         </td>
                     </tr>
+                    -->
+                    <!--
                     <tr>
                         <td></td>
                         <td>
@@ -54,10 +64,13 @@
                             <a href="/submitted?id={{name}}"><u>submissions</u></a>
                         </td>
                     </tr>
+                    -->
                 </tbody>
             </table>
+            {{#myprofile}}
             <br>
             <input type="submit" value="update">
+            {{/myprofile}}
         </form>
         <br>
         <br>

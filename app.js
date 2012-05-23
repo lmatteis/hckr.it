@@ -210,7 +210,8 @@ ddoc.lists.user = function(head, req) {
             title: user.name + ' | ',
             username: username,
             login: !(username),
-            user: user
+            user: user,
+            myprofile: user.name === username
         };
 
         var html = Mustache.to_html(this.templates.user, data, this.templates.partials);
