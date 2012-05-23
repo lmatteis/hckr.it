@@ -80,6 +80,22 @@ exports.timeDifference = function(current, previous) {
 }
 
 exports.formatdoc = function(content) {
+    // does away with nasty characters
+    var escapeHTML = function(s) {
+      s = String(s === null ? "" : s);
+      return s.replace(/&(?!\w+;)|["<>\\]/g, function(s) {
+        switch(s) {
+        case "&": return "&amp;";
+        case "\\": return "\\\\";
+        case '"': return '\"';
+        case "<": return "&lt;";
+        case ">": return "&gt;";
+        default: return s;
+        }
+      });
+    }
+    content = escapeHTML(content);
+
     var newlines = '[(\\r)?\\n]+';
 
     // first remove the newlines from the beginning and end of the content
@@ -88,6 +104,7 @@ exports.formatdoc = function(content) {
 
     // then replace each newlines with the paragraphs
     content = '<p>' + content.replace(new RegExp(newlines, 'g'), '</p><p>') + '</p>';
+
 
     return content;
 }
