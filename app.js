@@ -5,6 +5,7 @@ ddoc = {
     _id:'_design/news',
     rewrites : [
         {from:'/', to:'_list/all/all', query: { descending: "true" } },
+        {from:'/newest', to:'_list/all/newest', query: { descending: "true" } },
         {from:'/item', to:'_list/item/item', query: { key: ":id" } },
         {from:'/user', to:'_list/user/user', query: { key: ":id", group: "true" } },
         {from:'/about', to:'_show/about'},
@@ -35,6 +36,22 @@ ddoc.views.all = {
         }
     }
 };
+
+ddoc.views.newest = {
+    map: function(doc) {
+        if(doc.type === 'item') {
+            var util = require('views/lib/util');
+
+            emit(doc.created_at, {
+                doc: doc,
+                domain: util.getDomain(doc.url),
+                points: util.getPoints(doc.voted),
+                numcomments: util.getNumComments(doc.comments)            
+            });
+        }
+    }
+};
+
 ddoc.views.item = {
     map: function(doc) {
         if(doc.type === 'item') {
