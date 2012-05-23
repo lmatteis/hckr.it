@@ -7,9 +7,9 @@ ddoc = {
         {from:'/', to:'_list/all/all', query: { descending: "true" } },
         {from:'/item', to:'_list/item/item', query: { key: ":id" } },
         {from:'/user', to:'_list/user/user', query: { key: ":id", group: "true" } },
+        {from:'/about', to:'_show/about'},
         {from:'/login', to:'_show/login'},
         {from:'/submit', to:'_show/submit'},
-        {from:'/reply', to:'_show/reply'},
         {from:'/r', to:'_update/item'},
         {from:'/*', to:'*'}
     ]
@@ -244,16 +244,16 @@ ddoc.shows.login = function(doc, req) {
     var html = Mustache.to_html(this.templates.login, data, this.templates.partials);
     return html;
 }
-ddoc.shows.reply = function(doc, req) {
+ddoc.shows.about = function(doc, req) {
     var Mustache = require('views/lib/mustache');
 
     var data = {
-        title: 'Reply | ',
+        title: 'About | ',
         username: req.userCtx.name,
         login: !(req.userCtx.name)
     };
 
-    var html = Mustache.to_html(this.templates.reply, data, this.templates.partials);
+    var html = Mustache.to_html(this.templates.about, data, this.templates.partials);
     return html;
 }
 
