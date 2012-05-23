@@ -361,73 +361,86 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
             throw({forbidden : "Field can't be changed: " + field});
     }
 
+    var diffArrays = function(newArr, a) {
+        return newArr.filter(function(i) {return !(a.indexOf(i) > -1);});
+    };
+
+    function isArray( obj ) {
+        return toString.call(obj) === "[object Array]";
+    }
+
+    function sameArray(array1, array2) {
+        return (array1.sort().join(',') === array2.sort().join(','));
+    }
+
+    // are we logged in?
     var username = userCtx.name;
     if(!username || typeof username != "string" || username.length<1){
         unauthorized("Must be logged on");
     }
 
+    // make sure only admins can delete docs
+    if(newDoc._deleted === true && userCtx.roles.indexOf('_admin') === -1) {
+        forbidden("Only admin can delete documents on this database.");
+    }
+
+    // if we're deleting, skip the rest and just delete
+    if(newDoc._deleted === true) return;
+
+
     unchanged("type");
 
-    if (newDoc.author) {
-        if(newDoc.author != username){
-            // we're editing another's document probably to upvote
-            // be sure nothing else is changed
-            if(newDoc.type == 'item') {
-                unchanged("created_at");
-                unchanged("author");
-                unchanged("title");
-                unchanged("url");
-            } else if(newDoc.type == 'comment') {
-                unchanged("created_at");
-                unchanged("author");
-                unchanged("thead_id");
-                unchanged("parent_id");
-                unchanged("text");
-            }
-          //unauthorized("You may only update documents with author " + username);
-        }
-    }  
+    var type = newDoc.type;
+    switch(type) {
+        case "item": 
+            unchanged("created_at");
+            unchanged("author");
+            require("title");
+            require("url");
+            require("voted");
+            break;
+    }
 
-    function diffArrays (A, B) {
-        var strA = ":" + A.join("::") + ":";
-        var strB = ":" +  B.join(":|:") + ":";
-        var reg = new RegExp("(" + strB + ")","gi");
-        var strDiff = strA.replace(reg,"").replace(/^:/,"").replace(/:$/,"");
-        var arrDiff = strDiff.split("::");
-        return arrDiff;
+    // in case we're editing someone elses document, ONLY for voting
+    // so make sure all the other fields are unchanged
+    if(newDoc.author != username){
+        if(newDoc.type == 'item') {
+            unchanged("created_at");
+            unchanged("author");
+            unchanged("title");
+            unchanged("url");
+        } 
     }
-    function isArray( obj ) {
-        return toString.call(obj) === "[object Array]";
-    }
+
 
     // TODO make sure other properties are of correct format as well.
     // for now we're checking voted which is the most important one
     // since it dictates the ranking algorithm
-    if(newDoc.voted && !isArray(newDoc.voted)) {
+    if(!isArray(newDoc.voted)) {
         unauthorized("The voted property must be a JSON array!!");
     }
 
-    if(oldDoc && newDoc.voted && oldDoc.voted) {
-        if(newDoc.voted.length !== oldDoc.voted.length) {
+    // check we've voted an item
+    if(oldDoc) {
+        if(!sameArray(newDoc.voted, oldDoc.voted)) { // means arrays are different - either upvote or hijack
+            // since it's an upvote, check that we didn't vote it already
             for(var i=0; i<oldDoc.voted.length; i++) {
                 if(oldDoc.voted[i] === username) { 
                     unauthorized("you already upvoted this");
                 } 
             }
-        }
-    }
 
-    // check that it has changed - if it has, we only want one element to change and that must be the current user
-    if(oldDoc && newDoc.voted && oldDoc.voted) {
-        var diff = diffArrays(newDoc.voted, oldDoc.voted); 
-        if(diff.length > 1) {
-            unauthorized("You've added too many votes, hacker!");
-        } else if(diff.length === 1) {
-            // great someone added a vote! let's make sure it's them
-            if(diff[0] !== username && diff[0] !== "") {
-                unauthorized("You're adding a vote as someone else! CRACKER SMACKER");
+            var diff = diffArrays(newDoc.voted, oldDoc.voted); 
+            if(diff.length > 1) {
+                unauthorized("You've added too many votes, hacker!");
+            } else if(diff.length === 1) { // seems like a legit vote - see if it's the username
+                var newVote = diff[0];
+                if(newVote !== username) {
+                    unauthorized("You're adding a vote as someone else! CRACKER SMACKER");
+                }
             }
         }
+        
     }
     
     if(newDoc.comments) {
@@ -437,16 +450,6 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         }
     }
 
-    var type = newDoc.type;
-
-    switch(type) {
-        case "item": 
-            unchanged("created_at");
-            unchanged("author");
-            require("title");
-            require("url");
-            break;
-    }
 
     // make sure url is formatted correctly
     function isUrl(s) {
