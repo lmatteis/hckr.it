@@ -412,6 +412,9 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
             }
         }
     }
+    function isUrl(s) {
+        return s.match(/(^|\s)((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi);
+    }
 
     // are we logged in?
     var username = userCtx.name;
@@ -446,6 +449,10 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         if(newDoc.author !== username) {
             forbidden("You can't create a document with author as someone else other than you");
         }
+        // check format of date
+        if(!validDate(newDoc.created_at)) {
+            forbidden("Invalid date");
+        }
     }
 
     // in case we're editing someone elses document, ONLY for voting
@@ -459,9 +466,9 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         } 
     }
 
-    // check format of date
-    if(!validDate(newDoc.created_at)) {
-        forbidden("Invalid date");
+    // make sure url is formatted correctly
+    if(!isUrl(newDoc.url)) {
+        forbidden("URL is formatted incorrectly");
     }
 
     // TODO make sure other properties are of correct format as well.
@@ -486,6 +493,7 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         validateVotes(newDoc.voted, oldDoc.voted);
     }
     
+    // check the comments
     if(newDoc.comments) {
         for(var i in newDoc.comments) {
             var comment = newDoc.comments[i];
@@ -494,14 +502,6 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
     }
 
 
-    // make sure url is formatted correctly
-    function isUrl(s) {
-        return s.match(/(^|\s)((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi);
-    }
-
-    if(!isUrl(newDoc.url)) {
-        forbidden("URL is formatted incorrectly");
-    }
 }
 
 ddoc.views.lib = couchapp.loadFiles('./common');
