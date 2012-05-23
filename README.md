@@ -20,6 +20,16 @@ Simply click on the big "Sign Up Now" button on their homepage and create your o
 
     couchapp push app.js http://username:password@foo.iriscouch.com
 
+## You should probably host attachments/assets on a CDN
+
+CouchDB is not very good in serving static content because it doesn't allow you to modify the Cache-Control property
+to tell the browser to not fetch the content over and over. So an easy fix is to simply host the assets 
+(things like images, .css, .js files etc.) on a [CDN](http://en.wikipedia.org/wiki/Content_delivery_network). A good one
+is [CloudFare](http://www.cloudflare.com/).
+
+The only asset that you need to keep an eye on is `site.js`. It has all the logic for the frontend of the app. So be sure to
+update it from this repo, whenever an update is available.
+
 ## Beware! I was drinking lots of coffee when I wrote this
 
 This is basically a Hacker News clone for CouchDB. As a Couchapp. 
