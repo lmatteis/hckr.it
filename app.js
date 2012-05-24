@@ -518,13 +518,14 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         }
 
         // make sure all the properties are there
+        var newComments = [];
         for(var i in newDoc.comments) {
             var newComment = newDoc.comments[i];
             if(!newComment.comment_id) forbidden("Comment id required");
             if(!newComment.parent_id) forbidden("parent_id for comment is required");
             if(!newComment.author) forbidden("Author for comment is required");
             if(!newComment.voted) forbidden("Voted for comment is required");
-            if(!newComment.text) forbidden("Comment text for comment is required");
+            if(!newComment.text) forbidden("Text for comment is required");
 
             // compare the two to see if they are different
             if(oldDoc) {
@@ -533,9 +534,25 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
                     var oldComment = oldDoc.comments[x];
                     if(oldComment.comment_id === newComment.comment_id) {
                         found = true;
+                        validateVotes(newComment.voted, oldComment.voted);
                         break;
                     }
                 }
+                if(!found) { // hrm maybe it's a new comment?
+                    newComments.push(i);
+                }
+            }
+        }
+        if(newComments.length > 1) forbidden("You're adding too many comments!");
+
+        if(oldDoc && oldDoc.comments.length) {
+            // check arrays length now (not before) because we know that we only have 1 new comment
+            // therefore the rest must be the same - wow weird logic i know but should work
+            if(newComments.length && (newDoc.comments.length === oldDoc.comments.length)) {
+                forbidden("You're doing something weird with documents. Like changing its id");
+            }
+            if(newDoc.comments.length < oldDoc.comments.length) {
+                forbidden("You can't delete comments for now");
             }
         }
 
