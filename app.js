@@ -373,6 +373,22 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         return (array1.sort().join(',') === array2.sort().join(','));
     }
 
+    function objectEquals(obj1, obj2) {
+        for (var i in obj1) {
+            if (obj1.hasOwnProperty(i)) {
+                if (!obj2.hasOwnProperty(i)) return false;
+                if (obj1[i] != obj2[i]) return false;
+            }
+        }
+        for (var i in obj2) {
+            if (obj2.hasOwnProperty(i)) {
+                if (!obj1.hasOwnProperty(i)) return false;
+                if (obj1[i] != obj2[i]) return false;
+            }
+        }
+        return true;
+    }
+
     function validDate(dateStr) {
         var date = new Date(dateStr);
         if(date == 'Invalid Date') return false;
@@ -496,23 +512,25 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
     
     // check the comments
     if(newDoc.comments) {
-        // make sure this array isn't being changed.
-        // if it is changed, only that the user comment is
+        // must be array
+        if(!isArray(newDoc.comments)) {
+            unauthorized("The comment property must be a JSON array!!");
+        }
+
+        // make sure all the properties are there
         for(var i in newDoc.comments) {
             var comment = newDoc.comments[i];
             if(!comment.comment_id) forbidden("Comment id required");
             if(!comment.parent_id) forbidden("parent_id for comment is required");
-            if(!comment.text) forbidden("Comment text for comment is required");
-            if(!comment.voted) forbidden("Voted for comment is required");
             if(!comment.author) forbidden("Author for comment is required");
+            if(!comment.voted) forbidden("Voted for comment is required");
+            if(!comment.text) forbidden("Comment text for comment is required");
+        }
 
-            if(oldDoc) { // find the corrisponding comment_id
-                for(var x in oldDoc.comments) {
-                    if(oldDoc.comments[x].comment_id === comment.comment_id) { // modyfing an exisiting comment
+        // compare the two to see if they are different
+        if(oldDoc) {
+            
 
-                    }
-                }
-            }
         }
     }
 
