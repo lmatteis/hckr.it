@@ -459,6 +459,7 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
     // so make sure all the other fields are unchanged
     if(newDoc.author !== username){
         if(newDoc.type === 'item') {
+            // make sure only the voted property has changed
             unchanged("created_at");
             unchanged("author");
             unchanged("title");
@@ -495,9 +496,23 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
     
     // check the comments
     if(newDoc.comments) {
+        // make sure this array isn't being changed.
+        // if it is changed, only that the user comment is
         for(var i in newDoc.comments) {
             var comment = newDoc.comments[i];
-            if(!comment.text) forbidden("Comment text is required");
+            if(!comment.comment_id) forbidden("Comment id required");
+            if(!comment.parent_id) forbidden("parent_id for comment is required");
+            if(!comment.text) forbidden("Comment text for comment is required");
+            if(!comment.voted) forbidden("Voted for comment is required");
+            if(!comment.author) forbidden("Author for comment is required");
+
+            if(oldDoc) { // find the corrisponding comment_id
+                for(var x in oldDoc.comments) {
+                    if(oldDoc.comments[x].comment_id === comment.comment_id) { // modyfing an exisiting comment
+
+                    }
+                }
+            }
         }
     }
 
