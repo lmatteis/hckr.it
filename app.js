@@ -519,19 +519,26 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
 
         // make sure all the properties are there
         for(var i in newDoc.comments) {
-            var comment = newDoc.comments[i];
-            if(!comment.comment_id) forbidden("Comment id required");
-            if(!comment.parent_id) forbidden("parent_id for comment is required");
-            if(!comment.author) forbidden("Author for comment is required");
-            if(!comment.voted) forbidden("Voted for comment is required");
-            if(!comment.text) forbidden("Comment text for comment is required");
+            var newComment = newDoc.comments[i];
+            if(!newComment.comment_id) forbidden("Comment id required");
+            if(!newComment.parent_id) forbidden("parent_id for comment is required");
+            if(!newComment.author) forbidden("Author for comment is required");
+            if(!newComment.voted) forbidden("Voted for comment is required");
+            if(!newComment.text) forbidden("Comment text for comment is required");
+
+            // compare the two to see if they are different
+            if(oldDoc) {
+                var found = false;
+                for(var x in oldDoc.comments) {
+                    var oldComment = oldDoc.comments[x];
+                    if(oldComment.comment_id === newComment.comment_id) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
         }
 
-        // compare the two to see if they are different
-        if(oldDoc) {
-            
-
-        }
     }
 
 
