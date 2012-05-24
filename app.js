@@ -543,6 +543,7 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
                 }
             }
         }
+        return; // XXX
         if(newComments.length > 1) forbidden("You're adding too many comments!");
 
         if(oldDoc && oldDoc.comments.length) {
