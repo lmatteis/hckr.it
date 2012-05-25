@@ -18,7 +18,7 @@ If you want to install this app yourself, I strongly advise using the great [Iri
 
 Simply click on the big "Sign Up Now" button on their homepage and create your own Couch instance. You should get a http://foo.iriscouch.com domain. So to put hckr.it on it you can do:
 
-    couchapp push app.js http://username:password@foo.iriscouch.com
+    couchapp push app.js http://username:password@foo.iriscouch.com/dbname
 
 ## You should probably host attachments/assets on a CDN
 
