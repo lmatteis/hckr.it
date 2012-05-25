@@ -35,11 +35,11 @@ var comments = {
             var url = '';
             var data = {};
             if(docId) {
-                url = '/_update/voteup/' + docId;
+                url = '_update/voteup/' + docId;
             } else if(commentId) {
                 // get the docId from the form
                 docId = $('.addcomment').attr('doc_id'); 
-                url = '/_update/commentvoteup/' + docId;
+                url = '_update/commentvoteup/' + docId;
                 data.comment_id = commentId;
             }
 
@@ -55,7 +55,7 @@ var comments = {
                 error: function(req) {
                     var j = $.parseJSON(req.responseText);
                     if(j.reason === 'Must be logged on') {
-                        $(location).attr('href', '/login');
+                        $(location).attr('href', 'login');
                     }
                 }
             });
@@ -69,7 +69,7 @@ var comments = {
             var data = $this.serialize();
             var docId = $this.attr('doc_id');
             $.ajax({
-                url: '/_update/comment/' + docId,
+                url: '_update/comment/' + docId,
                 type: 'PUT',
                 data: data,
                 complete: function(req) {
@@ -117,7 +117,7 @@ var comments = {
 var auth = {
     logout: function() {
         $.ajax({
-            url: '/_session',
+            url: '_session',
             type: 'DELETE',
             username: '_',
             password: '_',
@@ -139,7 +139,7 @@ var auth = {
             _id: 'org.couchdb.user:' + encodeURIComponent(username)
         };
         $.ajax({
-            url: '/_users/' + userDoc._id,
+            url: '_users/' + userDoc._id,
             type: 'PUT',
             data: JSON.stringify(userDoc),
             dataType: 'json',
@@ -157,13 +157,13 @@ var auth = {
         });
     },
     login: function(username, password) {
-        $.post('/_session', { name: username, password: password })
+        $.post('_session', { name: username, password: password })
         .error(function(req) {
             var j = $.parseJSON(req.responseText);
             $('.login_error').text(j.reason);
         })
         .success(function() {
-            $(location).attr('href', '/');
+            $(location).attr('href', '');
         });
     },
     bind: function() {
@@ -193,13 +193,13 @@ var item = {
     submit: function() {
         $('.item-submit').submit(function(e) {
             var data = $(this).serialize();
-            $.post('/r', data)
+            $.post('r', data)
             .error(function(jqXHR) {
                 var j = $.parseJSON(jqXHR.responseText);
                 $('.error').text(j.reason);
             })
             .success(function() {
-                $(location).attr('href', '/');
+                $(location).attr('href', '');
             });
 
             e.preventDefault();
@@ -211,7 +211,7 @@ var karma = {
     getKarma: function() {
         var username = $('.username').text();
         if(!username) return;
-        $.getJSON('/karma', { user: username }, function(data) {
+        $.getJSON('karma', { user: username }, function(data) {
             var karma = data.rows[0].value;
             $('.karma').text(karma);
         });
