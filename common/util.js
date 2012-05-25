@@ -106,5 +106,16 @@ exports.formatdoc = function(content) {
     content = '<p>' + content.replace(new RegExp(newlines, 'g'), '</p><p>') + '</p>';
 
 
+    // convert URL to actual urls trimmed 60 chars
+    function replaceURLWithHTMLLinks(text) {
+        var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        return text.replace(exp, function(url) {
+            var shortUrl = url;
+            if(shortUrl.length > 60) shortUrl = shortUrl.substring(0, 60) + '...';
+            return '<a href="' + url + '">' + shortUrl + '</a>';
+        }); 
+    }
+    content = replaceURLWithHTMLLinks(content);
+
     return content;
 }
