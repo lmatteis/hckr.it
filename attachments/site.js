@@ -117,7 +117,7 @@ var comments = {
 var auth = {
     logout: function() {
         $.ajax({
-            url: '_session',
+            url: '/_session',
             type: 'DELETE',
             username: '_',
             password: '_',
@@ -139,7 +139,7 @@ var auth = {
             _id: 'org.couchdb.user:' + encodeURIComponent(username)
         };
         $.ajax({
-            url: '_users/' + userDoc._id,
+            url: '/_users/' + userDoc._id,
             type: 'PUT',
             data: JSON.stringify(userDoc),
             dataType: 'json',
@@ -157,13 +157,13 @@ var auth = {
         });
     },
     login: function(username, password) {
-        $.post('_session', { name: username, password: password })
+        $.post('/_session', { name: username, password: password })
         .error(function(req) {
             var j = $.parseJSON(req.responseText);
             $('.login_error').text(j.reason);
         })
         .success(function() {
-            $(location).attr('href', '');
+            $(location).attr('href', '.');
         });
     },
     bind: function() {
@@ -199,7 +199,7 @@ var item = {
                 $('.error').text(j.reason);
             })
             .success(function() {
-                $(location).attr('href', '');
+                $(location).attr('href', '.');
             });
 
             e.preventDefault();
