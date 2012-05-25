@@ -96,7 +96,7 @@ exports.formatdoc = function(content) {
     }
     content = escapeHTML(content);
 
-    var newlines = '[\\r?\\n]+';
+    var newlines = '[\\r\\n]+';
 
     // first remove the newlines from the beginning and end of the content
     content = content.replace(new RegExp('^' + newlines, 'g'), '');
