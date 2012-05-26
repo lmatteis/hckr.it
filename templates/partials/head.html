@@ -3,7 +3,7 @@
 <head>
   <title>{{#title}}{{title}} | {{/title}}{{>conf_title}}</title>
 <link rel="stylesheet" type="text/css" href="http://ycombinator.com/news.css" />
-<link rel="shortcut icon" href="http://i.imgur.com/jgLZr.gif" />
+<link rel="shortcut icon" href="{{>conf_logo}}" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="{{>conf_path}}site.js"></script>
 
@@ -29,23 +29,23 @@ $(function() {
         <td bgcolor="#D9E7FF">
           <table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding:2px">
             <tr>
-              <td style="width:18px;padding-right:4px"><a href="{{>conf_path"><img src="http://i.imgur.com/jgLZr.gif" width="18"
+              <td style="width:18px;padding-right:4px"><a href="{{>conf_path}}"><img src="{{>conf_logo}}" width="18"
               height="18" style=
               ""></a></td>
 
               <td style="line-height:12pt; height:10px;">
               <span class="pagetop"><b><a href="{{>conf_path}}">{{>conf_title}}</a></b><img src=
               "http://news.ycombinator.com/s.gif" height="1"
-              width="10"><a href="{{>conf_path}}{{>conf_newestlink}}">{{>conf_newest}}</a> | <a href=
-              "{{>conf_path}}{{>conf_submit}}">{{>conf_submit}}</a></span></td>
+              width="10"><a href="{{>conf_path}}newest">{{>conf_newest}}</a> | <a href=
+              "{{>conf_path}}submit">{{>conf_submit}}</a></span></td>
 
               <td style="text-align:right;padding-right:4px;">
               <span class="pagetop">
               {{#username}}
-                <a class="username" href="{{>conf_path}}user?id={{username}}">{{username}}</a> | <a class="logout" href="{{>conf_path}}{{>conf_logout}}">{{>conf_logout}}</a>
+                <a class="username" href="{{>conf_path}}user?id={{username}}">{{username}}</a> | <a class="logout" href="{{>conf_path}}logout">{{>conf_logout}}</a>
               {{/username}}
               {{#login}}
-                <a href="{{>conf_path}}{{>conf_login}}">{{>conf_login}}</a>
+                <a href="{{>conf_path}}login">{{>conf_login}}</a>
               {{/login}}
   
               </span></td>
