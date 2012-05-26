@@ -1,0 +1,25 @@
+{
+    "name": "news",
+    "version": "0.0.1",
+    "description": "Hacker News Clone",
+    "long_description": "A Hacker News clone. Allows users to submit links (with a title) to be listed. Others users can discuss on the links.",
+    "categories": ["news"],
+    "url": "https://github.com/lmatteis/hckr.it",
+    "app": "app",
+    "dependencies": {
+        "node-couchapp": null
+    },
+    "icons": {
+        "16": "icons/app_icon_16.png",
+        "48": "icons/app_icon_48.png",
+        "96": "images/app_icon_96.png",
+        "128": "icons/app_icon_128.png"
+    },
+    "promo_images": {
+            "small": "images/promo_small.png"
+    },
+    "screenshots": [
+            "images/screenshot1.png"
+    ]
+
+}
