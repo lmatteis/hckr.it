@@ -1,4 +1,4 @@
-body  { font-family:Verdana; font-size:10pt; color:#828282; }
+body  { font-family:Verdana; font-size:10pt; color:#828282; margin: 0; padding: 0 }
 td    { font-family:Verdana; font-size:10pt; color:#828282; }
 
 .admin td   { font-family:Verdana; font-size:8.5pt; color:#000000; }
