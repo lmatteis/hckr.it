@@ -1,5 +1,6 @@
 var couchapp = require('couchapp'), 
-    path = require('path');
+    path = require('path'),
+    config = require('./config.js');
 
 ddoc = { 
     _id:'_design/news',
@@ -199,7 +200,7 @@ ddoc.lists.item = function(head, req) {
         }
 
         var data = {
-            title: doc.title + ' | ',
+            title: doc.title,
             username: req.userCtx.name,
             login: !(req.userCtx.name),
             item: doc,
@@ -225,7 +226,7 @@ ddoc.lists.user = function(head, req) {
         user.karma = value.totalPoints;
 
         var data = {
-            title: user.name + ' | ',
+            title: user.name,
             username: username,
             login: !(username),
             user: user,
@@ -243,7 +244,7 @@ ddoc.shows.submit = function(doc, req) {
     var Mustache = require('views/lib/mustache');
 
     var data = {
-        title: 'Submit | ',
+        title: 'Submit',
         username: req.userCtx.name,
         login: !(req.userCtx.name)
     };
@@ -255,7 +256,7 @@ ddoc.shows.login = function(doc, req) {
     var Mustache = require('views/lib/mustache');
 
     var data = {
-        title: 'Login | ',
+        title: 'Login',
         username: req.userCtx.name,
         login: !(req.userCtx.name)
     };
@@ -267,7 +268,7 @@ ddoc.shows.about = function(doc, req) {
     var Mustache = require('views/lib/mustache');
 
     var data = {
-        title: 'About | ',
+        title: 'About',
         username: req.userCtx.name,
         login: !(req.userCtx.name)
     };
@@ -564,6 +565,8 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
 
 ddoc.views.lib = couchapp.loadFiles('./common');
 ddoc.templates = couchapp.loadFiles('./templates');
+for(var i in config) ddoc.templates.partials[i] = config[i];
+
 couchapp.loadAttachments(ddoc, path.join(__dirname, 'attachments'));
 
 module.exports = ddoc;

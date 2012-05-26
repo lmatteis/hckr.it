@@ -3,6 +3,6 @@
                         <img src="http://news.ycombinator.com/s.gif" height="1" width="14">
                         {{/owner}}
                         {{^owner}}
-                        <a class="voteup"{{#comment_id}} comment_id="{{comment_id}}"{{/comment_id}} doc_id="{{_id}}" href="vote?for={{_id}}&dir=up"{{#upvoted}} style="visibility:hidden;"{{/upvoted}}><img src="http://news.ycombinator.com/grayarrow.gif" border="0" vspace="3" hspace="2"></a>
+                        <a class="voteup"{{#comment_id}} comment_id="{{comment_id}}"{{/comment_id}} doc_id="{{_id}}" href="{{>conf_path}}vote?for={{_id}}&dir=up"{{#upvoted}} style="visibility:hidden;"{{/upvoted}}><img src="http://news.ycombinator.com/grayarrow.gif" border="0" vspace="3" hspace="2"></a>
                             <span class="down_3982041"></span>
                         {{/owner}}
