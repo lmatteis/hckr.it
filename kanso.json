@@ -1,0 +1,9 @@
+{
+    "name": "hckr_it",
+    "version": "0.0.1",
+    "description": "A hacker news clone",
+    "app": "app",
+    "dependencies": {
+        "node-couchapp": null
+    }
+}
