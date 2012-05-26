@@ -34,18 +34,18 @@ $(function() {
               ""></a></td>
 
               <td style="line-height:12pt; height:10px;">
-              <span class="pagetop"><b><a href="{{>conf_path}}">hckr.it</a></b><img src=
+              <span class="pagetop"><b><a href="{{>conf_path}}">{{>conf_title}}</a></b><img src=
               "http://news.ycombinator.com/s.gif" height="1"
-              width="10"><a href="{{>conf_path}}newest">new</a> | <a href=
-              "{{>conf_path}}submit">submit</a></span></td>
+              width="10"><a href="{{>conf_path}}{{>conf_newestlink}}">{{>conf_newest}}</a> | <a href=
+              "{{>conf_path}}{{>conf_submit}}">{{>conf_submit}}</a></span></td>
 
               <td style="text-align:right;padding-right:4px;">
               <span class="pagetop">
               {{#username}}
-                <a class="username" href="{{>conf_path}}user?id={{username}}">{{username}}</a> | <a class="logout" href="{{>conf_path}}logout">logout</a>
+                <a class="username" href="{{>conf_path}}user?id={{username}}">{{username}}</a> | <a class="logout" href="{{>conf_path}}{{>conf_logout}}">{{>conf_logout}}</a>
               {{/username}}
               {{#login}}
-                <a href="{{>conf_path}}login">login</a>
+                <a href="{{>conf_path}}{{>conf_login}}">{{>conf_login}}</a>
               {{/login}}
   
               </span></td>
