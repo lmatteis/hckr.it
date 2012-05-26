@@ -12,6 +12,9 @@ And then simply push this source code to your couchdb instance:
 
     couchapp push app.js http://yourcouch.com/dbname
 
+Remember to look into the `config.js` file so you can change certain words to fit your app needs. 
+Such as the title of your app, and you can even translate other things into your own language.
+
 ## Deploying to IrisCouch
 
 If you want to install this app yourself, I strongly advise using the great [IrisCouch](http://www.iriscouch.com/) hosting service. It's free to start with and comes with a great pricing plan. This is where [hckr.it](http://www.hckr.it/) is hosted.
