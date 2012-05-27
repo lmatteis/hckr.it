@@ -574,7 +574,7 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
         }
         if(newComments.length > 1) forbidden("You're adding too many comments!");
 
-        if(oldDoc && oldDoc.comments.length) {
+        if(oldDoc && oldDoc.comments && oldDoc.comments.length) {
             // check arrays length now (not before) because we know that we only have 1 new comment
             // therefore the rest must be the same - wow weird logic i know but should work
             if(newComments.length && (newDoc.comments.length === oldDoc.comments.length)) {
