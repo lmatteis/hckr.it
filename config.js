@@ -1,6 +1,8 @@
 module.exports = {
     conf_title: 'hckr.it',
     conf_path : '/',
+    conf_perpage : '30',
+
     conf_logo : 'http://i.imgur.com/jgLZr.gif',
     conf_about : 'about',
     conf_morelink : 'More',

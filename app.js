@@ -5,15 +5,15 @@ var couchapp = require('couchapp'),
 ddoc = { 
     _id:'_design/news',
     rewrites : [
-        {from:'/', to:'_list/all/all', query: { descending: "true" } },
-        {from:'/newest', to:'_list/all/newest', query: { descending: "true" } },
-        {from:'/item', to:'_list/item/item', query: { key: ":id" } },
-        {from:'/user', to:'_list/user/user', query: { key: ":id", group: "true" } },
-        {from:'/about', to:'_show/about'},
-        {from:'/login', to:'_show/login'},
-        {from:'/submit', to:'_show/submit'},
-        {from:'/r', to:'_update/item'},
-        {from:'/*', to:'*'}
+        { from:'/', to:'_list/all/all', query: { descending: "true", limit: config.conf_perpage } },
+        { from:'/newest', to:'_list/all/newest', query: { descending: "true", limit: config.conf_perpage } },
+        { from:'/item', to:'_list/item/item', query: { key: ":id" } },
+        { from:'/user', to:'_list/user/user', query: { key: ":id", group: "true" } },
+        { from:'/about', to:'_show/about'},
+        { from:'/login', to:'_show/login'},
+        { from:'/submit', to:'_show/submit'},
+        { from:'/r', to:'_update/item'},
+        { from:'/*', to:'*'}
     ]
 };
 
@@ -133,10 +133,14 @@ ddoc.lists.all = function(head, req) {
 
         var username = req.userCtx.name;
 
+        var querySkip = parseInt((req.query.skip || 0), 10);
+        var skip = querySkip + parseInt(this.templates.partials.conf_perpage, 10);
+
         var data = {
             title: '',
             username: username,
             login: !(username),
+            skip: skip,
             rows: []
         };
 
@@ -147,7 +151,7 @@ ddoc.lists.all = function(head, req) {
             doc.points = row.value.points;
             doc.numcomments = row.value.numcomments;
 
-            doc.counter = ++counter;
+            doc.counter = (++counter) + querySkip;
             doc.pretty_date = util.timeDifference(new Date(), new Date(doc.created_at));
 
             doc.owner = (doc.author == req.userCtx.name);
