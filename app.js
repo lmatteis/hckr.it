@@ -396,6 +396,10 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
 
         // this current date shouldn't be more than 1 minute before NOW
         var elapsed = new Date() - date;
+
+        // be sure elapsed is not a negative number (we dont wanna add a future date)
+        if(elapsed < 0) return false;
+
         var msPerMinute = 60 * 1000;
         var minutesPassed = Math.round(elapsed/msPerMinute)
 
@@ -528,23 +532,42 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
             if(!newComment.voted) forbidden("Voted for comment is required");
             if(!newComment.text) forbidden("Text for comment is required");
 
+            // be sure we don't have more than 1 comment with the same comment_id
+            var beforeIndex = i-1;
+            if(newDoc.comments[beforeIndex]) {
+                if(newComment.comment_id === newDoc.comments[beforeIndex].comment_id) {
+                    forbidden("You're adding a comment with an ID that already exists!");    
+                }
+            }
+
             // compare the two to see if they are different
             if(oldDoc) {
                 var found = false;
                 for(var x in oldDoc.comments) {
                     var oldComment = oldDoc.comments[x];
-                    if(oldComment.comment_id === newComment.comment_id) {
+                    if(oldComment.comment_id === newComment.comment_id) { 
+                        // we found our comment, see that nothing changed expect votes
+                        // or maybe the user editing it?
                         found = true;
                         validateVotes(newComment.voted, oldComment.voted);
+                        if(newComment.parent_id !== oldComment.parent_id ||
+                            newComment.author !== oldComment.author ||
+                            newComment.text !== oldComment.text) {
+
+                            forbidden("Can't change a comment's properties");
+                        }
+
                         break;
                     }
                 }
                 if(!found) { // hrm maybe it's a new comment?
-                    newComments.push(i);
+                    newComments.push(newComment);
                 }
             }
+            if(!oldDoc) {
+                newComments.push(newComment);
+            }
         }
-        return; // XXX
         if(newComments.length > 1) forbidden("You're adding too many comments!");
 
         if(oldDoc && oldDoc.comments.length) {
@@ -558,9 +581,21 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
             }
         }
 
+        if(newComments.length) { // we're adding a SINGLE comment, be sure it's of the right author
+            if(newComments[0].author !== username) {
+                forbidden("You can only add a comment as yourself");
+            }
+            if(!validDate(newComments[0].comment_id)) {
+                forbidden("Invalid comment_id");
+            }
+            if(!newComments[0].voted.length) {
+                unauthorized("The comment voted array is empty!")
+            }
+            if(newComments[0].voted[0] !== username) {
+                unauthorized("The comment voted array must have your user in it")
+            }
+        }
     }
-
-
 }
 
 ddoc.views.lib = couchapp.loadFiles('./common');
