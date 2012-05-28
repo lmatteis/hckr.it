@@ -9,6 +9,7 @@ ddoc = {
         { from:'/newest', to:'_list/all/newest', query: { descending: "true", limit: config.conf_perpage } },
         { from:'/item', to:'_list/item/item', query: { key: ":id" } },
         { from:'/user', to:'_list/user/user', query: { key: ":id", group: "true" } },
+        { from:'/threads', to:'_list/threads/threads', query: { startkey: [":id", {}], endkey: [":id"], descending: "true" } },
         { from:'/about', to:'_show/about'},
         { from:'/login', to:'_show/login'},
         { from:'/submit', to:'_show/submit'},
@@ -121,6 +122,30 @@ ddoc.views.user = {
         }
 
         return ret;
+    }
+}
+
+ddoc.views.threads = {
+    map: function(doc) {
+        function getChildren(root, parentId, level) {
+            level--;
+            for(var x in doc.comments) {
+                var child = doc.comments[x];
+                if(parentId === child.parent_id) {
+                    emit([root.author, root.comment_id, level], child);
+
+                    getChildren(root, child.comment_id, level);
+                }
+            }
+        }
+        if(doc.type === 'item') {
+            for(var i in doc.comments) {
+                var comment = doc.comments[i];
+                emit([comment.author, comment.comment_id, 0], comment);
+                // get children
+                getChildren(comment, comment.comment_id, 0);
+            }
+        }
     }
 }
 
