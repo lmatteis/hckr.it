@@ -127,6 +127,7 @@ ddoc.views.user = {
 
 ddoc.views.threads = {
     map: function(doc) {
+        var util = require('views/lib/util');
         function getChildren(path, parentId) {
             for(var x in doc.comments) {
                 var child = doc.comments[x];
@@ -135,7 +136,13 @@ ddoc.views.threads = {
                     var p = path.slice()
                     p.push(child.comment_id);
 
-                    emit(p, { comment: child, _id: doc._id });
+                    var comment = {};
+                    for(var i in child) {
+                        comment[i] = child[i];
+                    }
+                    comment.text = util.formatdoc(comment.text);
+
+                    emit(p, { comment: comment, _id: doc._id });
 
                     getChildren(p, child.comment_id);
                 }
@@ -145,7 +152,13 @@ ddoc.views.threads = {
             for(var i in doc.comments) {
                 var comment = doc.comments[i];
                 var path = [comment.author, parseInt('-' + (new Date(comment.comment_id).getTime()), 10)];
-                emit(path, { comment: comment, _id: doc._id });
+
+                var c = {};
+                for(var x in comment) {
+                    c[x] = comment[x];
+                }
+                c.text = util.formatdoc(c.text);
+                emit(path, { comment: c, _id: doc._id });
                 // get children
                 getChildren(path, comment.comment_id);
             }
@@ -273,6 +286,7 @@ ddoc.lists.user = function(head, req) {
 ddoc.lists.threads = function(head, req) {
     provides('html', function(){
         var Mustache = require('views/lib/mustache');
+        var util = require('views/lib/util');
 
         var username = req.userCtx.name;
 
@@ -295,6 +309,7 @@ ddoc.lists.threads = function(head, req) {
             // indent
             comment.indent = (row.key.length - 2) * 40;
             comment.doc_id = row.value._id;
+            comment.pretty_date = util.timeDifference(new Date(), new Date(comment.comment_id));
 
             data.comments.push(comment);
         }
