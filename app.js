@@ -9,7 +9,7 @@ ddoc = {
         { from:'/newest', to:'_list/all/newest', query: { descending: "true", limit: config.conf_perpage } },
         { from:'/item', to:'_list/item/item', query: { key: ":id" } },
         { from:'/user', to:'_list/user/user', query: { key: ":id", group: "true" } },
-        { from:'/threads', to:'_list/threads/threads', query: { startkey: [":id", {}], endkey: [":id"], descending: "true" } },
+        { from:'/threads', to:'_list/threads/threads', query: { startkey: [":id"], endkey: [":id", {}], limit: config.conf_perpage } },
         { from:'/about', to:'_show/about'},
         { from:'/login', to:'_show/login'},
         { from:'/submit', to:'_show/submit'},
@@ -127,23 +127,27 @@ ddoc.views.user = {
 
 ddoc.views.threads = {
     map: function(doc) {
-        function getChildren(root, parentId, level) {
-            level--;
+        function getChildren(path, parentId) {
             for(var x in doc.comments) {
                 var child = doc.comments[x];
-                if(parentId === child.parent_id) {
-                    emit([root.author, root.comment_id, level], child);
+                if(parentId === child.parent_id) { // found children
+                    // copy path so we don't modify it
+                    var p = path.slice()
+                    p.push(child.comment_id);
 
-                    getChildren(root, child.comment_id, level);
+                    emit(p, { comment: child, _id: doc._id });
+
+                    getChildren(p, child.comment_id);
                 }
             }
         }
         if(doc.type === 'item') {
             for(var i in doc.comments) {
                 var comment = doc.comments[i];
-                emit([comment.author, comment.comment_id, 0], comment);
+                var path = [comment.author, parseInt('-' + (new Date(comment.comment_id).getTime()), 10)];
+                emit(path, { comment: comment, _id: doc._id });
                 // get children
-                getChildren(comment, comment.comment_id, 0);
+                getChildren(path, comment.comment_id);
             }
         }
     }
@@ -263,6 +267,38 @@ ddoc.lists.user = function(head, req) {
         };
 
         var html = Mustache.to_html(this.templates.user, data, this.templates.partials);
+        return html;
+    });
+}
+ddoc.lists.threads = function(head, req) {
+    provides('html', function(){
+        var Mustache = require('views/lib/mustache');
+
+        var username = req.userCtx.name;
+
+        var querySkip = parseInt((req.query.skip || 0), 10);
+        var skip = querySkip + parseInt(this.templates.partials.conf_perpage, 10);
+        var data = {
+            title: req.query.id + '\'s comments',
+            username: username,
+            login: !(username),
+            skip: skip,
+            userid: req.query.id,
+            comments: []
+        };
+        var row;
+        while(row = getRow()) {
+            var comment = row.value.comment;
+            if(comment.author === username) {
+                comment.owner = true;
+            }
+            // indent
+            comment.indent = (row.key.length - 2) * 40;
+            comment.doc_id = row.value._id;
+
+            data.comments.push(comment);
+        }
+        var html = Mustache.to_html(this.templates.threads, data, this.templates.partials);
         return html;
     });
 }

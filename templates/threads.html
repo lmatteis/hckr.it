@@ -1,0 +1,37 @@
+{{>head}}
+                {{#comments}}
+                <tr comment_id="{{comment_id}}" parent_id="{{parent_id}}">
+                    <td>
+                        <table border="0">
+                            <tbody>
+                                <tr><td><img src="http://news.ycombinator.com/s.gif" height="1" width="{{indent}}" class="level"></td>
+                                    <td valign="top">
+                                        <center>
+                                        {{>upvote}}
+                                        </center>
+                                    </td>
+                                    <td class="default">
+                                        <div style="margin-top:2px; margin-bottom:-10px; ">
+                                            <span class="comhead">{{points}} {{>conf_pointsby}} <a href="{{>conf_path}}user?id={{author}}">{{author}}</a>
+                                                {{pretty_date}} |
+                                                <a href="{{>conf_path}}item?id={{doc_id}}" name="{{comment_id}}">link</a></span>
+                                        </div>
+                                        <br>
+                                        <span class="comment">
+                                            <font color="#000000">
+                                            {{{text}}}     
+                                            </font>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                {{/comments}}
+                <tr style="height:10px"></tr>
+                <tr>
+
+                  <td class="title"><a href="threads?id={{userid}}&skip={{skip}}" rel="nofollow">{{>conf_morelink}}</a></td>
+                </tr>
+{{>tail}}

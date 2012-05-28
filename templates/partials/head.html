@@ -34,10 +34,17 @@ $(function() {
               ""></a></td>
 
               <td style="line-height:12pt; height:10px;">
-              <span class="pagetop"><b><a href="{{>conf_path}}">{{>conf_title}}</a></b><img src=
-              "http://news.ycombinator.com/s.gif" height="1"
-              width="10"><a href="{{>conf_path}}newest">{{>conf_newest}}</a> | <a href=
-              "{{>conf_path}}submit">{{>conf_submit}}</a></span></td>
+              <span class="pagetop"><b><a href="{{>conf_path}}">{{>conf_title}}</a></b><img src="http://news.ycombinator.com/s.gif" height="1" width="10" /><a href="{{>conf_path}}newest">{{>conf_newest}}</a> | 
+                {{#username}}
+                <a href="{{>conf_path}}threads?id={{username}}">{{>conf_threads}}</a> |
+                {{/username}}
+                <a href="{{>conf_path}}submit">{{>conf_submit}}</a>
+                
+              </span>
+
+              
+              </td>
+
 
               <td style="text-align:right;padding-right:4px;">
               <span class="pagetop">

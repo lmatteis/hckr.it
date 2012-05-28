@@ -15,5 +15,6 @@ module.exports = {
     conf_logout : 'logout',
     conf_newest : 'new',
     conf_submit : 'submit',
+    conf_threads : 'threads',
     conf_submittitle : 'title'
 };
