@@ -92,7 +92,7 @@ Simply click on the big "Sign Up Now" button on their homepage and create your o
 
 ## Dealing with spammers
 
-The issue with these systems where there's voting involved, spammers are always an issue. This Couchapp enforces very stringent rules and allows users to only upvote once. However, someone could take the time and create new accounts and use these new accounts to upvote several items, therefore resulting in multiple votes coming from a single person. This should be avoided, since voting is at the heart of this application.
+With these type of systems where there's voting involved, spammers are always an issue. This Couchapp enforces very stringent rules and allows users to only upvote once. However, someone could take the time and create new accounts and use these new accounts to upvote several items, therefore resulting in multiple votes coming from a single person. This should be avoided, since voting is at the heart of this application.
 
 There might be several ways of solving this issue:
 
@@ -108,4 +108,4 @@ will surely find many email addresses and create many different accounts and the
 
 #### Let the community decide!
 
-This is indeed what will work at the end of the day. Sites such as StackOverflow and even HN itself have a little "flag" link on each of their post. **Users decide whether a post is coming from a spammer or not**.
+This is indeed what will work at the end of the day. Sites such as StackOverflow and even HN itself have a little "flag" link on each of their post. **The community decides whether a post is coming from a spammer or not**.
