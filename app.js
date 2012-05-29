@@ -104,22 +104,33 @@ ddoc.views.user = {
 
             for(var i in doc.comments) {
                 var comment = doc.comments[i];
-                emit(comment.author, { points: util.getPoints(comment.voted) });
+                emit(comment.author, { about: '', about_html:'', points: util.getPoints(comment.voted) });
             }
-            emit(doc.author, { points: points });
+            emit(doc.author, { about: '', about_html: '', points: points });
+
+        }
+        if(doc.type === 'user') {
+            var util = require('views/lib/util');
+            emit(doc._id, { about: doc.about, about_html: util.formatdoc(doc.about), points: 0 });
         }
     },
     reduce: function (key, values, rereduce) {
         var ret = {
-            totalPoints: 0
+            totalPoints: 0,
+            about: '',
+            about_html: ''
         };
         if(!rereduce) {
             for(var i in values) {
                 ret.totalPoints += values[i].points;
+                ret.about += values[i].about;
+                ret.about_html += values[i].about_html;
             }
         } else {
             for(var i in values) {
                 ret.totalPoints += values[i].totalPoints;
+                ret.about += values[i].about;
+                ret.about_html += values[i].about_html;
             }
         }
 
@@ -324,6 +335,8 @@ ddoc.lists.user = function(head, req) {
         var user = {};
         user.name = row.key;
         user.karma = value.totalPoints;
+        user.about = value.about;
+        user.about_html = value.about_html;
 
         var data = {
             title: user.name,
@@ -475,6 +488,23 @@ ddoc.updates.comment = function(doc, req) {
     return [doc, 'commented'];
 }
 
+ddoc.updates.user = function(doc, req) {
+    var about = req.form.about;
+    var username = req.form.username;
+
+    if(!doc) {
+        doc = {};
+        doc._id = username;
+        doc.created_at = JSON.parse(JSON.stringify(new Date));
+    }
+
+    doc.last_modified = JSON.parse(JSON.stringify(new Date));
+    doc.about = about;
+    doc.type = 'user';
+    
+    return [doc, 'updated user'];
+}
+
 ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
     function forbidden(message) {    
         throw({forbidden : message});
@@ -584,7 +614,6 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
     // if we're deleting, skip the rest and just delete
     if(newDoc._deleted === true) return;
 
-
     unchanged("type");
 
     var type = newDoc.type;
@@ -596,6 +625,14 @@ ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
             require("url");
             require("voted");
             break;
+    }
+
+    if(type === 'user') {
+        if(newDoc._id !== username) {
+            forbidden("You can't modify other's user info");
+        }
+
+        return; // we don't wanna check the rest
     }
 
     // if we're creating a document the first time, the author must be the username

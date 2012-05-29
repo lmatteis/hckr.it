@@ -207,6 +207,31 @@ var item = {
     }
 };
 
+var user = {
+    submit: function() {
+        $('.user-submit').submit(function(e) {
+            var data = $(this).serialize();
+
+            $.ajax({
+                url: '_update/user/' + $('[name=username]').val(),
+                type: 'PUT',
+                data: data,
+                complete: function(req) {
+                    if (req.status == 200 || req.status == 201 || req.status == 202) {
+                        location.reload();
+                    }
+                },
+                error: function(req) {
+                    var j = $.parseJSON(req.responseText);
+                    $('.error').text(j.reason);
+                }
+            });
+
+            e.preventDefault();
+        });
+    }
+};
+
 var karma = {
     getKarma: function() {
         var username = $('.username').text();

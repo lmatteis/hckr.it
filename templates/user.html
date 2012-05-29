@@ -1,9 +1,14 @@
 {{>head}}
 
 {{#user}}
+<script>
+$(function() {
+user.submit();
+});
+</script>
 <tr>
     <td>
-        <form method="post" action="/x">
+        <form class="user-submit" method="post" action="/x">
             <table border="0">
                 <tbody>
                     <tr>
@@ -24,6 +29,8 @@
                         <td valign="top">about:</td>
                         <td>
                             {{#myprofile}}
+                            <input type="hidden" name="username" value="{{name}}" />
+                            <span class='error' style='color:red'></span>
                             <textarea cols="60" rows="7" wrap="virtual" name="about">{{about}}</textarea>
                             <font
                             size="-2">
@@ -31,18 +38,10 @@
                                 </font>
                             {{/myprofile}}
                             {{^myprofile}}
-                                {{about}}
+                                {{{about_html}}}
                             {{/myprofile}}
                         </td>
                     </tr>
-                    {{#myprofile}}
-                    <tr>
-                        <td valign="top">email:</td>
-                        <td>
-                            <input type="text" name="email" value="" size="60">
-                        </td>
-                    </tr>
-                    {{/myprofile}}
                     <!--
                     <tr>
                         <td></td>
