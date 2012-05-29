@@ -228,16 +228,15 @@ ddoc.lists.all = function(head, req) {
         var lastPath = req.path[req.path.length - 1];
         var userId = req.query.id;
 
-        if(userId !== username) {
-            return "Can't display that.";
-        }
-
         if(lastPath === 'submitted') {
             data.title = userId + "'s submissions";
         } else if (lastPath === 'newest') {
             data.title = 'New Links';
         } else if (lastPath === 'saved') {
             data.title = 'Saved Links';
+            if(userId !== username) {
+                return "Can't display that.";
+            }
         }
 
         var counter = 0;
