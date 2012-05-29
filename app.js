@@ -10,6 +10,7 @@ ddoc = {
         { from:'/item', to:'_list/item/item', query: { key: ":id" } },
         { from:'/user', to:'_list/user/user', query: { key: ":id", group: "true" } },
         { from:'/threads', to:'_list/threads/threads', query: { startkey: [":id"], endkey: [":id", {}], limit: config.conf_perpage } },
+        { from:'/submitted', to:'_list/all/submitted', query: { startkey: [":id", {}], endkey: [":id"], descending: "true" } },
         { from:'/about', to:'_show/about'},
         { from:'/login', to:'_show/login'},
         { from:'/submit', to:'_show/submit'},
@@ -48,7 +49,7 @@ ddoc.views.newest = {
                 doc: doc,
                 domain: util.getDomain(doc.url),
                 points: util.getPoints(doc.voted),
-                numcomments: util.getNumComments(doc.comments)            
+                numcomments: util.getNumComments(doc.comments) 
             });
         }
     }
@@ -166,6 +167,21 @@ ddoc.views.threads = {
     }
 }
 
+ddoc.views.submitted = {
+    map: function(doc) {
+        if(doc.type === 'item') {
+            var util = require('views/lib/util');
+
+            emit([doc.author, doc.created_at], {
+                doc: doc,
+                domain: util.getDomain(doc.url),
+                points: util.getPoints(doc.voted),
+                numcomments: util.getNumComments(doc.comments) 
+            });
+        }
+    }
+}
+
 ddoc.lists = {};
 ddoc.lists.all = function(head, req) {
     provides('html', function(){
@@ -186,6 +202,14 @@ ddoc.lists.all = function(head, req) {
             rows: []
         };
 
+        var lastPath = req.path[req.path.length - 1];
+        var userId = req.query.id;
+        if(lastPath === 'submitted') {
+            data.title = userId + "'s submissions";
+        } else if (lastPath === 'newest') {
+            data.title = 'New Links';
+        }
+
         var counter = 0;
         while(row = getRow()) {
             var doc = row.value.doc;
@@ -204,6 +228,7 @@ ddoc.lists.all = function(head, req) {
             data.rows.push(doc);
         }
         var html = Mustache.to_html(this.templates.all, data, this.templates.partials);
+
         return html;
     });
 };
@@ -317,7 +342,6 @@ ddoc.lists.threads = function(head, req) {
         return html;
     });
 }
-
 
 ddoc.shows = {};
 ddoc.shows.submit = function(doc, req) {
