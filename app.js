@@ -11,6 +11,7 @@ ddoc = {
         { from:'/user', to:'_list/user/user', query: { key: ":id", group: "true" } },
         { from:'/threads', to:'_list/threads/threads', query: { startkey: [":id"], endkey: [":id", {}], limit: config.conf_perpage } },
         { from:'/submitted', to:'_list/all/submitted', query: { startkey: [":id", {}], endkey: [":id"], descending: "true" } },
+        { from:'/saved', to:'_list/all/saved', query: { startkey: [":id", {}], endkey: [":id"], descending: "true" } },
         { from:'/about', to:'_show/about'},
         { from:'/login', to:'_show/login'},
         { from:'/submit', to:'_show/submit'},
@@ -182,6 +183,28 @@ ddoc.views.submitted = {
     }
 }
 
+ddoc.views.saved = {
+    map: function(doc) {
+        if(doc.type === 'item') {
+            var util = require('views/lib/util');
+            
+            var domain = util.getDomain(doc.url);
+            var points = util.getPoints(doc.voted);
+            var numcomments = util.getNumComments(doc.comments);
+
+            for(var i in doc.voted) {
+                emit([doc.voted[i], doc.created_at], {
+                    doc: doc,
+                    domain: domain,
+                    points: points,
+                    numcomments: numcomments 
+                });
+            }
+
+        }
+    }
+}
+
 ddoc.lists = {};
 ddoc.lists.all = function(head, req) {
     provides('html', function(){
@@ -204,10 +227,17 @@ ddoc.lists.all = function(head, req) {
 
         var lastPath = req.path[req.path.length - 1];
         var userId = req.query.id;
+
+        if(userId !== username) {
+            return "Can't display that.";
+        }
+
         if(lastPath === 'submitted') {
             data.title = userId + "'s submissions";
         } else if (lastPath === 'newest') {
             data.title = 'New Links';
+        } else if (lastPath === 'saved') {
+            data.title = 'Saved Links';
         }
 
         var counter = 0;
