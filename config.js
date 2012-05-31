@@ -6,10 +6,13 @@ module.exports = {
     conf_logo : 'http://i.imgur.com/jgLZr.gif',
     conf_color: '#D9E7FF',
     conf_about : 'about',
+
+    conf_discuss: 'discuti',
+    conf_comments: 'commenti',
     conf_morelink : 'More',
-    conf_addcomment : 'add comment',
-    conf_pointsby : 'points by',
-    conf_commentreply : 'reply',
+    conf_addcomment : 'aggiungi commento',
+    conf_pointsby : 'punti',
+    conf_commentreply : 'rispondi',
     conf_username : 'username',
     conf_password : 'password',
     conf_login : 'login',
@@ -17,5 +20,5 @@ module.exports = {
     conf_newest : 'new',
     conf_submit : 'submit',
     conf_threads : 'threads',
-    conf_submittitle : 'title'
+    conf_submittitle : 'titolo'
 };

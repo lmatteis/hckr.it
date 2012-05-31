@@ -1,4 +1,4 @@
               <td class="subtext"><span>{{points}}
               </span> {{>conf_pointsby}} <a href=
               "{{>conf_path}}user?id={{author}}">{{author}}</a> <span class="created_at">{{pretty_date}}</span> |
-              <a href="{{>conf_path}}item?id={{_id}}">{{#numcomments}}{{numcomments}} comments{{/numcomments}}{{^numcomments}}discuss{{/numcomments}}</a></td>
+              <a href="{{>conf_path}}item?id={{_id}}">{{#numcomments}}{{numcomments}} {{>conf_comments}}{{/numcomments}}{{^numcomments}}{{>conf_discuss}}{{/numcomments}}</a></td>
