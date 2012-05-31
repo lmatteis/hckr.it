@@ -329,22 +329,26 @@ ddoc.lists.user = function(head, req) {
         var Mustache = require('views/lib/mustache');
 
         var username = req.userCtx.name;
-        var row = getRow();
-        var value = row.value;
-
         var user = {};
-        user.name = row.key;
-        user.karma = value.totalPoints;
-        user.about = value.about;
-        user.about_html = value.about_html;
+        user.name = req.query.id;
 
         var data = {
             title: user.name,
             username: username,
             login: !(username),
-            user: user,
-            myprofile: user.name === username
+            myprofile: user.name === username,
+            user: user
         };
+        var row = getRow();
+        if(row) {
+            var value = row.value;
+
+            user.karma = value.totalPoints;
+            user.about = value.about;
+            user.about_html = value.about_html;
+
+            data.user = user;
+        }
 
         var html = Mustache.to_html(this.templates.user, data, this.templates.partials);
         return html;
