@@ -28,8 +28,10 @@ module.exports = {
     conf_yearago: 'anno fa',
     conf_yearsago: 'anni fa',
 
-    conf_discuss: 'discuti',
+    conf_comment: 'commento',
     conf_comments: 'commenti',
+
+    conf_discuss: 'discuti',
     conf_morelink : 'More',
     conf_addcomment : 'aggiungi commento',
     conf_commentreply : 'rispondi',

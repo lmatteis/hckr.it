@@ -252,6 +252,8 @@ ddoc.lists.all = function(head, req) {
 
         var point = this.templates.partials.conf_point;
         var points = this.templates.partials.conf_points;
+        var conf_comment = this.templates.partials.conf_comment;
+        var conf_comments = this.templates.partials.conf_comments;
 
         var counter = 0;
         while(row = getRow()) {
@@ -263,7 +265,8 @@ ddoc.lists.all = function(head, req) {
             } else {
                 doc.points = row.value.points + ' ' + point;
             }
-            doc.numcomments = row.value.numcomments;
+
+            doc.numcomments = (row.value.numcomments > 1 ? row.value.numcomments + ' ' + conf_comments : row.value.numcomments + ' ' + conf_comment);
 
             doc.counter = (++counter) + querySkip;
             doc.pretty_date = util.timeDifference(new Date(), new Date(doc.created_at), this.templates.partials);
@@ -302,7 +305,10 @@ ddoc.lists.item = function(head, req) {
         } else {
             doc.points = value.points + ' ' + point;
         }
-        doc.numcomments = value.numcomments;
+        doc.numcomments = (value.numcomments > 1 ? 
+                            value.numcomments + ' ' + this.templates.partials.conf_comments :
+                            value.numcomments + ' ' + this.templates.partials.conf_comment);
+
         doc.pretty_date = util.timeDifference(currDate, new Date(doc.created_at), this.templates.partials);
 
         // check if we upvoted already
