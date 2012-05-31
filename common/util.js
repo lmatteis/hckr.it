@@ -44,7 +44,7 @@ exports.inArray = function(value, arr) {
     return false;
 }
 
-exports.timeDifference = function(current, previous) {
+exports.timeDifference = function(current, previous, config) {
     
     var msPerMinute = 60 * 1000;
     var msPerHour = msPerMinute * 60;
@@ -55,27 +55,63 @@ exports.timeDifference = function(current, previous) {
     var elapsed = current - previous;
     
     if (elapsed < msPerMinute) {
-         return Math.round(elapsed/1000) + ' seconds ago';   
+        var val = Math.round(elapsed/1000); 
+        if(val > 1) {
+            val += ' ' + config.conf_secondsago;
+        } else {
+            val += ' ' + config.conf_secondago;
+        }
+        return val;   
     }
     
     else if (elapsed < msPerHour) {
-         return Math.round(elapsed/msPerMinute) + ' minutes ago';   
+        var val =  Math.round(elapsed/msPerMinute);   
+        if(val > 1) {
+            val += ' ' + config.conf_minutesago;
+        } else {
+            val += ' ' + config.conf_minuteago;
+        }
+        return val;
     }
     
     else if (elapsed < msPerDay ) {
-         return Math.round(elapsed/msPerHour ) + ' hours ago';   
+        var val = Math.round(elapsed/msPerHour );   
+        if(val > 1) {
+            val += ' ' + config.conf_hoursago;
+        } else {
+            val += ' ' + config.conf_hourago;
+        }
+        return val;
     }
 
     else if (elapsed < msPerMonth) {
-         return Math.round(elapsed/msPerDay) + ' days ago';   
+        var val = Math.round(elapsed/msPerDay);   
+        if(val > 1) {
+            val += ' ' + config.conf_daysago;
+        } else {
+            val += ' ' + config.conf_dayago;
+        }
+        return val;
     }
     
     else if (elapsed < msPerYear) {
-         return Math.round(elapsed/msPerMonth) + ' months ago';   
+        var val = Math.round(elapsed/msPerMonth);   
+        if(val > 1) {
+            val += ' ' + config.conf_monthsago;
+        } else {
+            val += ' ' + config.conf_monthago;
+        }
+        return val;
     }
     
     else {
-         return  Math.round(elapsed/msPerYear ) + ' years ago';   
+        var val = Math.round(elapsed/msPerYear );   
+        if(val > 1) {
+            val += ' ' + config.conf_yearsago;
+        } else {
+            val += ' ' + config.conf_yearago;
+        }
+        return val;
     }
 }
 

@@ -7,11 +7,31 @@ module.exports = {
     conf_color: '#D9E7FF',
     conf_about : 'about',
 
+    conf_point : 'punto',
+    conf_points : 'punti',
+
+    conf_secondago: 'secondo fa',
+    conf_secondsago: 'secondi fa',
+
+    conf_minuteago: 'minuto fa',
+    conf_minutesago: 'minuti fa',
+
+    conf_hourago: 'ora fa',
+    conf_hoursago: 'ore fa',
+
+    conf_dayago: 'giorno fa',
+    conf_daysago: 'giorni fa',
+
+    conf_monthago: 'mese fa',
+    conf_monthsago: 'mesi fa',
+
+    conf_yearago: 'anno fa',
+    conf_yearsago: 'anni fa',
+
     conf_discuss: 'discuti',
     conf_comments: 'commenti',
     conf_morelink : 'More',
     conf_addcomment : 'aggiungi commento',
-    conf_pointsby : 'punti',
     conf_commentreply : 'rispondi',
     conf_username : 'username',
     conf_password : 'password',

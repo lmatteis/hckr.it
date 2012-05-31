@@ -250,15 +250,23 @@ ddoc.lists.all = function(head, req) {
             }
         }
 
+        var point = this.templates.partials.conf_point;
+        var points = this.templates.partials.conf_points;
+
         var counter = 0;
         while(row = getRow()) {
             var doc = row.value.doc;
             doc.domain = row.value.domain;
-            doc.points = row.value.points;
+
+            if(row.value.points > 1) {
+                doc.points = row.value.points + ' ' + points;
+            } else {
+                doc.points = row.value.points + ' ' + point;
+            }
             doc.numcomments = row.value.numcomments;
 
             doc.counter = (++counter) + querySkip;
-            doc.pretty_date = util.timeDifference(new Date(), new Date(doc.created_at));
+            doc.pretty_date = util.timeDifference(new Date(), new Date(doc.created_at), this.templates.partials);
 
             doc.owner = (doc.author == req.userCtx.name);
             if(util.inArray(username, doc.voted)) {
@@ -285,9 +293,17 @@ ddoc.lists.item = function(head, req) {
         
         var doc = value.doc;
         doc.domain = value.domain;
-        doc.points = value.points;
+
+        var point = this.templates.partials.conf_point;
+        var points = this.templates.partials.conf_points;
+
+        if(value.points > 1) {
+            doc.points = value.points + ' ' + points;
+        } else {
+            doc.points = value.points + ' ' + point;
+        }
         doc.numcomments = value.numcomments;
-        doc.pretty_date = util.timeDifference(currDate, new Date(doc.created_at));
+        doc.pretty_date = util.timeDifference(currDate, new Date(doc.created_at), this.templates.partials);
 
         // check if we upvoted already
         if(util.inArray(username, doc.voted)) {
@@ -307,7 +323,13 @@ ddoc.lists.item = function(head, req) {
             } else {
                 comment.owner = false;
             }
-            comment.pretty_date = util.timeDifference(currDate, new Date(comment.comment_id));
+            comment.pretty_date = util.timeDifference(currDate, new Date(comment.comment_id), this.templates.partials);
+
+            if(comment.points > 1) {
+                comment.points += ' ' + points;
+            } else {
+                comment.points += ' ' + point;
+            }
         }
 
         var data = {
@@ -380,7 +402,7 @@ ddoc.lists.threads = function(head, req) {
             // indent
             comment.indent = (row.key.length - 2) * 40;
             comment.doc_id = row.value._id;
-            comment.pretty_date = util.timeDifference(new Date(), new Date(comment.comment_id));
+            comment.pretty_date = util.timeDifference(new Date(), new Date(comment.comment_id), this.templates.partials);
 
             data.comments.push(comment);
         }
