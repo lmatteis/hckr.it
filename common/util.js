@@ -56,60 +56,60 @@ exports.timeDifference = function(current, previous, config) {
     
     if (elapsed < msPerMinute) {
         var val = Math.round(elapsed/1000); 
-        if(val > 1) {
-            val += ' ' + config.conf_secondsago;
-        } else {
+        if(val == 1) {
             val += ' ' + config.conf_secondago;
+        } else {
+            val += ' ' + config.conf_secondsago;
         }
         return val;   
     }
     
     else if (elapsed < msPerHour) {
         var val =  Math.round(elapsed/msPerMinute);   
-        if(val > 1) {
-            val += ' ' + config.conf_minutesago;
-        } else {
+        if(val == 1) {
             val += ' ' + config.conf_minuteago;
+        } else {
+            val += ' ' + config.conf_minutesago;
         }
         return val;
     }
     
     else if (elapsed < msPerDay ) {
         var val = Math.round(elapsed/msPerHour );   
-        if(val > 1) {
-            val += ' ' + config.conf_hoursago;
-        } else {
+        if(val == 1) {
             val += ' ' + config.conf_hourago;
+        } else {
+            val += ' ' + config.conf_hoursago;
         }
         return val;
     }
 
     else if (elapsed < msPerMonth) {
         var val = Math.round(elapsed/msPerDay);   
-        if(val > 1) {
-            val += ' ' + config.conf_daysago;
-        } else {
+        if(val == 1) {
             val += ' ' + config.conf_dayago;
+        } else {
+            val += ' ' + config.conf_daysago;
         }
         return val;
     }
     
     else if (elapsed < msPerYear) {
         var val = Math.round(elapsed/msPerMonth);   
-        if(val > 1) {
-            val += ' ' + config.conf_monthsago;
-        } else {
+        if(val == 1) {
             val += ' ' + config.conf_monthago;
+        } else {
+            val += ' ' + config.conf_monthsago;
         }
         return val;
     }
     
     else {
         var val = Math.round(elapsed/msPerYear );   
-        if(val > 1) {
-            val += ' ' + config.conf_yearsago;
-        } else {
+        if(val == 1) {
             val += ' ' + config.conf_yearago;
+        } else {
+            val += ' ' + config.conf_yearsago;
         }
         return val;
     }

@@ -260,13 +260,13 @@ ddoc.lists.all = function(head, req) {
             var doc = row.value.doc;
             doc.domain = row.value.domain;
 
-            if(row.value.points > 1) {
-                doc.points = row.value.points + ' ' + points;
-            } else {
+            if(row.value.points == 1) {
                 doc.points = row.value.points + ' ' + point;
+            } else {
+                doc.points = row.value.points + ' ' + points;
             }
 
-            doc.numcomments = (row.value.numcomments > 1 ? row.value.numcomments + ' ' + conf_comments : row.value.numcomments + ' ' + conf_comment);
+            doc.numcomments = (row.value.numcomments == 1 ? row.value.numcomments + ' ' + conf_comment : row.value.numcomments + ' ' + conf_comments);
 
             doc.counter = (++counter) + querySkip;
             doc.pretty_date = util.timeDifference(new Date(), new Date(doc.created_at), this.templates.partials);
@@ -300,14 +300,14 @@ ddoc.lists.item = function(head, req) {
         var point = this.templates.partials.conf_point;
         var points = this.templates.partials.conf_points;
 
-        if(value.points > 1) {
-            doc.points = value.points + ' ' + points;
-        } else {
+        if(value.points == 1) {
             doc.points = value.points + ' ' + point;
+        } else {
+            doc.points = value.points + ' ' + points;
         }
-        doc.numcomments = (value.numcomments > 1 ? 
-                            value.numcomments + ' ' + this.templates.partials.conf_comments :
-                            value.numcomments + ' ' + this.templates.partials.conf_comment);
+        doc.numcomments = (value.numcomments == 1 ? 
+                            value.numcomments + ' ' + this.templates.partials.conf_comment :
+                            value.numcomments + ' ' + this.templates.partials.conf_comments);
 
         doc.pretty_date = util.timeDifference(currDate, new Date(doc.created_at), this.templates.partials);
 
@@ -331,10 +331,10 @@ ddoc.lists.item = function(head, req) {
             }
             comment.pretty_date = util.timeDifference(currDate, new Date(comment.comment_id), this.templates.partials);
 
-            if(comment.points > 1) {
-                comment.points += ' ' + points;
-            } else {
+            if(comment.points == 1) {
                 comment.points += ' ' + point;
+            } else {
+                comment.points += ' ' + points;
             }
         }
 
