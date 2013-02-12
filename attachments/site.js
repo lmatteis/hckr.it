@@ -17,19 +17,19 @@ var comments = {
             $this.show();
             // show them by appending at this level
             if(!level) {
-                $this.insertAfter('.comments');
+                $this.after('.comments');
             } else {
                 // get the level width property
                 // and add 40 to it
                 var width = level.find('.level').attr('width');
                 $this.find('.level').attr('width', parseInt(width, 10) + 40);
-                $this.insertAfter(level);
+                $this.after(level);
             }
             comments.getCommentsByParentId($this, $this.attr('comment_id'));
         });
     },
     voteBind: function() {
-        $('.voteup').on('click', function(e) {
+        $(document).on('click', '.voteup', function(e) {
             var $this = $(this);
             var docId = $this.attr('doc_id');
             var commentId = $this.attr('comment_id');
@@ -66,7 +66,7 @@ var comments = {
         });
     },
     commentBind: function() {
-        $('.addcomment').on('submit', function(e) {
+        $(document).on('submit', '.addcomment', function(e) {
             var $this = $(this);
             var data = $this.serialize();
             var docId = $this.attr('doc_id');
