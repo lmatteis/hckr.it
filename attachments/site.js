@@ -12,6 +12,8 @@ var comments = {
         $comments.each(function() {
             // let's clone it so it doesn't effect the actual HTML
             var $this = $(this).clone();
+            $(this).remove(); // we can remove the current comment, not using it!
+
             $this.show();
             // show them by appending at this level
             if(!level) {
@@ -111,6 +113,9 @@ var comments = {
             e.stopPropagation();
             e.preventDefault();
         });
+    },
+    scroll: function() {
+        window.location.hash = window.location.hash;
     }
 };
 
