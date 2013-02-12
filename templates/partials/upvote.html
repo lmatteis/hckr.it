@@ -1,6 +1,6 @@
                         {{#owner}}
                         <font color="#ff6600">*</font><br>
-                        <img height="1" width="14">
+                        <img src="http://ycombinator.com/images/s.gif" height="1" width="14">
                         {{/owner}}
                         {{^owner}}
                         <a class="voteup"{{#comment_id}} comment_id="{{comment_id}}"{{/comment_id}} doc_id="{{_id}}" href="{{>conf_path}}vote?for={{_id}}&dir=up"{{#upvoted}} style="visibility:hidden;"{{/upvoted}}><img src="http://news.ycombinator.com/grayarrow.gif" border="0" vspace="3" hspace="2"></a>

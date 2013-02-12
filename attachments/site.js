@@ -11,19 +11,23 @@ var comments = {
 
         $comments.each(function() {
             // let's clone it so it doesn't effect the actual HTML
+            /*
             var $this = $(this).clone();
             $(this).remove(); // we can remove the current comment, not using it - it's for hashbangs ot work!
+            */
+
+            var $this = $(this);
 
             $this.show();
             // show them by appending at this level
             if(!level) {
-                $this.after('.comments');
+                $('.comments').prepend($this)
             } else {
                 // get the level width property
                 // and add 40 to it
                 var width = level.find('.level').attr('width');
                 $this.find('.level').attr('width', parseInt(width, 10) + 40);
-                $this.after(level);
+                $this.insertAfter(level);
             }
             comments.getCommentsByParentId($this, $this.attr('comment_id'));
         });
