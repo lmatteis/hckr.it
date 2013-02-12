@@ -25,7 +25,7 @@ var comments = {
             } else {
                 // get the level width property
                 // and add 40 to it
-                var width = level.find('.level').attr('width');
+                var width = level.find('.level').prop('width');
                 $this.find('.level').attr('width', parseInt(width, 10) + 40);
                 $this.insertAfter(level);
             }
