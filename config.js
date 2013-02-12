@@ -7,34 +7,34 @@ module.exports = {
     conf_color: '#D9E7FF',
     conf_about : 'about',
 
-    conf_point : 'punto',
-    conf_points : 'punti',
+    conf_point : 'point',
+    conf_points : 'points',
 
-    conf_secondago: 'secondo fa',
-    conf_secondsago: 'secondi fa',
+    conf_secondago: 'second ago',
+    conf_secondsago: 'seconds ago',
 
-    conf_minuteago: 'minuto fa',
-    conf_minutesago: 'minuti fa',
+    conf_minuteago: 'minute ago',
+    conf_minutesago: 'minutes ago',
 
-    conf_hourago: 'ora fa',
-    conf_hoursago: 'ore fa',
+    conf_hourago: 'hour ago',
+    conf_hoursago: 'hours ago',
 
-    conf_dayago: 'giorno fa',
-    conf_daysago: 'giorni fa',
+    conf_dayago: 'day ago',
+    conf_daysago: 'days ago',
 
-    conf_monthago: 'mese fa',
-    conf_monthsago: 'mesi fa',
+    conf_monthago: 'month ago',
+    conf_monthsago: 'months ago',
 
-    conf_yearago: 'anno fa',
-    conf_yearsago: 'anni fa',
+    conf_yearago: 'year ago',
+    conf_yearsago: 'years ago',
 
-    conf_comment: 'commento',
-    conf_comments: 'commenti',
+    conf_comment: 'comment',
+    conf_comments: 'comments',
 
-    conf_discuss: 'discuti',
+    conf_discuss: 'discuss',
     conf_morelink : 'More',
-    conf_addcomment : 'aggiungi commento',
-    conf_commentreply : 'rispondi',
+    conf_addcomment : 'add comment',
+    conf_commentreply : 'reply',
     conf_username : 'username',
     conf_password : 'password',
     conf_login : 'login',
@@ -42,5 +42,5 @@ module.exports = {
     conf_newest : 'new',
     conf_submit : 'submit',
     conf_threads : 'threads',
-    conf_submittitle : 'titolo'
+    conf_submittitle : 'title'
 };
