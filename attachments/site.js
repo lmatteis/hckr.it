@@ -12,7 +12,7 @@ var comments = {
         $comments.each(function() {
             // let's clone it so it doesn't effect the actual HTML
             var $this = $(this).clone();
-            $(this).remove(); // we can remove the current comment, not using it!
+            $(this).remove(); // we can remove the current comment, not using it - it's for hashbangs ot work!
 
             $this.show();
             // show them by appending at this level
@@ -29,7 +29,7 @@ var comments = {
         });
     },
     voteBind: function() {
-        $('.voteup').live('click', function(e) {
+        $('.voteup').on('click', function(e) {
             var $this = $(this);
             var docId = $this.attr('doc_id');
             var commentId = $this.attr('comment_id');
@@ -66,7 +66,7 @@ var comments = {
         });
     },
     commentBind: function() {
-        $('.addcomment').live('submit', function(e) {
+        $('.addcomment').on('submit', function(e) {
             var $this = $(this);
             var data = $this.serialize();
             var docId = $this.attr('doc_id');
@@ -116,12 +116,8 @@ var comments = {
     },
     scroll: function() {
         if (location.hash) {
-            if ( $.browser.webkit == false ) {
-                window.location.hash = location.hash
-            } else {
-                window.location.href = location.hash;
-                window.location.href = location.hash
-            }
+            window.location.hash = location.hash;
+            window.location.href = location.hash;
         }
     }
 };

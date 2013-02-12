@@ -4,7 +4,7 @@
   <title>{{#title}}{{title}} | {{/title}}{{>conf_title}}</title>
 <link rel="stylesheet" type="text/css" href="http://ycombinator.com/news.css" />
 <link rel="shortcut icon" href="{{>conf_logo}}" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="{{>conf_path}}site.js"></script>
 
 <script>
@@ -34,7 +34,7 @@ $(function() {
               ""></a></td>
 
               <td style="line-height:12pt; height:10px;">
-              <span class="pagetop"><b><a href="{{>conf_path}}">{{>conf_title}}</a></b><img src="http://news.ycombinator.com/s.gif" height="1" width="10" /><a href="{{>conf_path}}newest">{{>conf_newest}}</a> | 
+              <span class="pagetop"><b><a href="{{>conf_path}}">{{>conf_title}}</a></b><img height="1" width="10" /><a href="{{>conf_path}}newest">{{>conf_newest}}</a> | 
                 {{#username}}
                 <a href="{{>conf_path}}threads?id={{username}}">{{>conf_threads}}</a> |
                 {{/username}}
