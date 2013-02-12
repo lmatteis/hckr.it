@@ -7,7 +7,9 @@
 $(function() {
     comments.getCommentsByParentId(0, '0');
     comments.commentBind();
-    comments.scroll();
+    setTimeout(function() {
+        comments.scroll();
+    }, 500)
 });
 </script>
         <table border="0">

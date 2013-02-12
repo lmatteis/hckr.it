@@ -115,7 +115,14 @@ var comments = {
         });
     },
     scroll: function() {
-        window.location.hash = window.location.hash;
+        if (location.hash) {
+            if ( $.browser.webkit == false ) {
+                window.location.hash = location.hash
+            } else {
+                window.location.href = location.hash;
+                window.location.href = location.hash
+            }
+        }
     }
 };
 
