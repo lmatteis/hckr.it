@@ -475,6 +475,7 @@ ddoc.updates.item = function(doc, req) {
     
     return [doc, {
         'headers' : {
+            'Content-Type' : 'text/html',
             'Location' : '/'
         }
     }];
