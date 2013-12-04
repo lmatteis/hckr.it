@@ -474,6 +474,7 @@ ddoc.updates.item = function(doc, req) {
     doc.type = 'item';
     
     return [doc, {
+        'code': 302,
         'headers' : {
             'Location' : '/'
         }
